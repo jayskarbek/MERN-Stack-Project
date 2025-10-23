@@ -1,23 +1,10 @@
-body {
-    background-color: rgb(210, 182, 147);
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: 0;
-    height: 100vh;
-}
-
 #loginDiv {
     font-size: 40px;
     padding: 15px;
     width: 30%;
     height: 60%;
     background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 20px;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);   
+    border-radius: 20px;  
 }
 
 #inner-title {
@@ -26,25 +13,10 @@ body {
     font-weight: bold;
 }
 
-#loginName {
-    font-size: 25px;
-}
-#loginPassword {
-    font-size: 25px;
-}
-
 .buttons {
     display: block;
 	width: 55%;          
 	margin: 0 auto;      
 	font-size: 28px;
 	border-radius: 25px;
-}
-
-input[type="text"],input[type="password"]
-{
-    border-radius: 25px;
-    background-color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    width: 80%;
 }
