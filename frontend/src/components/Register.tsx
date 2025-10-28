@@ -90,6 +90,20 @@ const Register: React.FC = () => {
             />
             <span id="registerResult"></span>
         </form>
+        
+        <div
+            style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '12px',
+            color: 'rgba(255,255,255,0.85)',
+            fontSize: '12px',
+            textAlign: 'right',
+            fontStyle: 'italic',
+            }}
+        >
+            Photo from Getty Images
+        </div>
     </div>
     );
 };
