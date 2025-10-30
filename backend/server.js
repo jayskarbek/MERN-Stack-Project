@@ -4,6 +4,7 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb+srv://hugoputigna:SzyF0sJk6Z40f1Uh@cardcluster.eup3fgb.mongodb.net/?retryWrites=true&w=majority&appName=CardCluster';
 const client = new MongoClient(url);
+let parksCollection;
 client.connect();
 app.use(cors({
     origin: 'http://134.199.193.253:5100/', // Replace with your frontend's origin
