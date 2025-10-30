@@ -1,0 +1,51 @@
+.state-park-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 16px;
+    text-align: center;
+}
+
+.state-park-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.state-park-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.state-park-name {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.state-park-counties {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    color: #555;
+}
+
+.state-park-link {
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.state-park-link:hover {
+    text-decoration: underline;
+}
