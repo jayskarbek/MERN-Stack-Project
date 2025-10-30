@@ -2,8 +2,10 @@ import React from 'react';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const backgroundStyle: React.CSSProperties = {
         backgroundImage: `url(${backgroundImage})`,
         backgroundRepeat: 'no-repeat',
@@ -82,7 +84,7 @@ const Login: React.FC = () => {
             >
                 Don’t have an account?{' '}
             <span
-                //onClick={() => navigate('/register')}
+                onClick={() => navigate('/register')}
                 style={{
                     color: 'blue',
                     textDecoration: 'underline',
