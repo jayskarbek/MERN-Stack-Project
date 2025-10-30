@@ -15,7 +15,7 @@ app.use(cors({
 async function connectDB() {
     try {
         await client.connect(); // Connect to MongoDB
-        const db = client.db('COP4331Parks'); // Replace 'CardCluster' with your database name
+        const db = client.db('COP4331Cards'); 
         parksCollection = db.collection('Parks'); // Replace 'parks' with your collection name
         console.log('MongoDB Connected');
     } catch (err) {
