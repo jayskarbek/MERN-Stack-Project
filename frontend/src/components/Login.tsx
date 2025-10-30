@@ -1,11 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    function buildPath(route: string) {
+        return `http://localhost:5000/${route}`;
+    }
+    async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+        event.preventDefault();
+        
+        if (!login || !password) {
+            setError("Please fill out all forms");
+            return;
+        }
+
+        try {
+            const response = await fetch(buildPath('api/login'), {
+                method: 'POST',
+                body: JSON.stringify({ login, password }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            const res = await response.json();
+
+            if (res.id === -1) {
+                setError('Invalid username or password');
+            } else {
+                setError(''); 
+                console.log('Login successful:', res);
+                navigate('/Home');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            setError('Error connecting to the Server');
+        } 
+    }
     const backgroundStyle: React.CSSProperties = {
         backgroundImage: `url(${backgroundImage})`,
         backgroundRepeat: 'no-repeat',
@@ -20,11 +56,6 @@ const Login: React.FC = () => {
         position: 'relative',
     };
 
-    function doLogin(event: React.FormEvent<HTMLFormElement>): void {
-        event.preventDefault();
-        alert('doIt()');
-    }
-
   return (
     <div style={backgroundStyle}>
         <form id="loginDiv" onSubmit={doLogin} className="text-center">
@@ -33,7 +64,7 @@ const Login: React.FC = () => {
             <input
                 type="text"
                 id="loginName"
-                placeholder="Username"
+                placeholder="Enter your email"
                 className="form-control mx-auto my-3"
                 style={{   
                     fontSize: '25px', 
@@ -41,11 +72,13 @@ const Login: React.FC = () => {
                     borderRadius: '25px', 
                     backgroundColor: 'rgba(255,255,255,0.6)', 
                     textAlign: 'center' }}
+                value={login}
+                onChange={e => setLogin(e.target.value)}
             />
             <input
                 type="password"
                 id="loginPassword"
-                placeholder="Password"
+                placeholder="Enter your password"
                 className="form-control mx-auto my-3"
                 style={{ 
                     fontSize: '25px', 
@@ -53,7 +86,16 @@ const Login: React.FC = () => {
                     borderRadius: '25px', 
                     backgroundColor: 'rgba(255,255,255,0.6)', 
                     textAlign: 'center' }}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
             />
+            {error && 
+            <div style={{ 
+                        fontSize: '15px', 
+                        color: 'red', 
+                        marginBottom: '10px' }}
+            >{error}
+            </div>}
             <a 
                 href="?"
                 style={{
