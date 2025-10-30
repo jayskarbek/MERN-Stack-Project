@@ -1,13 +1,20 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+
+/* TODO: Add email when database is updated*/
 
 module.exports = function (db) {
     const router = express.Router();
+    const users = db.collection('Users');
 
     router.post('/login', async (req, res, next) => {
         // incoming: login, password
         // outgoing: id, firstName, lastName, error
         var error = '';
-        const { login, password } = req.body;
+        let { login, password } = req.body;
+
+        // Trims all fields
+        [login, password] = [login, password].map(f => f?.trim());
 
         // Check inputs
         if (!login || !password) {
@@ -20,8 +27,7 @@ module.exports = function (db) {
         }
 
         try {
-            const collection = db.collection('Users');
-            const user = await collection.findOne({ Login: login });
+            const user = await users.findOne({ Login: login });
 
             // Username not found
             if (!user) {
@@ -33,8 +39,11 @@ module.exports = function (db) {
                 });
             }
 
+            // Check against hashed password
+            const passwordMatch = await bcrypt.compare(password, user.Password);
+
             // Password does not match
-            if (!(password == user.password)) {
+            if (!passwordMatch) {
                 return res.status(401).json({
                     id: 0,
                     firstName: '',
