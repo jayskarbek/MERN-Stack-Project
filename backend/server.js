@@ -6,7 +6,7 @@ const url = 'mongodb+srv://hugoputigna:SzyF0sJk6Z40f1Uh@cardcluster.eup3fgb.mong
 const client = new MongoClient(url);
 client.connect();
 app.use(cors({
-    origin: 'http://134.199.193.253:3000/', // Replace with your frontend's origin
+    origin: 'http://134.199.193.253:5000/', // Replace with your frontend's origin
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 }));
