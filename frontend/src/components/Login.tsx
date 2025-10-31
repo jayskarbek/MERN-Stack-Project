@@ -21,7 +21,7 @@ const Login: React.FC = () => {
             return;
         }
 
-        try {
+        try { 
             const response = await fetch(buildPath('api/login'), {
                 method: 'POST',
                 body: JSON.stringify({ login, password }),
@@ -30,6 +30,7 @@ const Login: React.FC = () => {
 
             const res = await response.json();
 
+            //something goes wrong here and unsure
             if (res.id === -1) {
                 setError('Invalid username or password');
             } else {

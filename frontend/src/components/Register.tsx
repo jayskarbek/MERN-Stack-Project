@@ -4,7 +4,7 @@ import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Register.css';
 
-const Register: React.FC = () => {
+const Register: React.FC = () => { 
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
