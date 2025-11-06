@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "react-router": "^7.9.4"
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "react-router": "^7.9.4",
+    "react-router-dom": "^7.9.5"
   }
 }

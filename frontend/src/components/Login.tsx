@@ -1,9 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    function buildPath(route: string) {
+        return `http://localhost:5000/${route}`;
+    }
+
+    async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+        event.preventDefault();
+        
+        if (!login || !password) {
+            setError("Please fill out all forms");
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try { 
+            const response = await fetch(buildPath('api/login'), {
+                method: 'POST',
+                body: JSON.stringify({ login, password }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            const res = await response.json();
+
+            if (!response.ok) {
+                // Handle error responses
+                setError(res.error || 'Invalid username or password');
+                setIsLoading(false);
+                return;
+            }
+
+            // Login successful - Store JWT token and user info
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('userId', res.id);
+            localStorage.setItem('firstName', res.firstName);
+            localStorage.setItem('lastName', res.lastName);
+
+            console.log('Login successful:', res);
+            
+            // Navigate to the card page
+            navigate('/CardPage');
+            
+        } catch (err) {
+            console.error('Fetch error:', err);
+            setError('Error connecting to the Server');
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     const backgroundStyle: React.CSSProperties = {
         backgroundImage: `url(${backgroundImage})`,
         backgroundRepeat: 'no-repeat',
@@ -18,98 +75,115 @@ const Login: React.FC = () => {
         position: 'relative',
     };
 
-    function doLogin(event: React.FormEvent<HTMLFormElement>): void {
-        event.preventDefault();
-        alert('doIt()');
-    }
-
-  return (
-    <div style={backgroundStyle}>
-        <form id="loginDiv" onSubmit={doLogin} className="text-center">
-            <span id="inner-title">Login</span>
-            <br />
-            <input
-                type="text"
-                id="loginName"
-                placeholder="Username"
-                className="form-control mx-auto my-3"
-                style={{   
-                    fontSize: '25px', 
-                    width: '80%', 
-                    borderRadius: '25px', 
-                    backgroundColor: 'rgba(255,255,255,0.6)', 
-                    textAlign: 'center' }}
-            />
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Password"
-                className="form-control mx-auto my-3"
-                style={{ 
-                    fontSize: '25px', 
-                    width: '80%', 
-                    borderRadius: '25px', 
-                    backgroundColor: 'rgba(255,255,255,0.6)', 
-                    textAlign: 'center' }}
-            />
-            <a 
-                href="?"
+    return (
+        <div style={backgroundStyle}>
+            <form id="loginDiv" onSubmit={doLogin} className="text-center">
+                <span id="inner-title">Login</span>
+                <br />
+                <input
+                    type="text"
+                    id="loginName"
+                    placeholder="Enter your email"
+                    className="form-control mx-auto my-3"
+                    style={{   
+                        fontSize: '25px', 
+                        width: '80%', 
+                        borderRadius: '25px', 
+                        backgroundColor: 'rgba(255,255,255,0.6)', 
+                        textAlign: 'center' 
+                    }}
+                    value={login}
+                    onChange={e => setLogin(e.target.value)}
+                    disabled={isLoading}
+                />
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter your password"
+                    className="form-control mx-auto my-3"
+                    style={{ 
+                        fontSize: '25px', 
+                        width: '80%', 
+                        borderRadius: '25px', 
+                        backgroundColor: 'rgba(255,255,255,0.6)', 
+                        textAlign: 'center' 
+                    }}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    disabled={isLoading}
+                />
+                {error && 
+                    <div style={{ 
+                        fontSize: '15px', 
+                        color: 'red', 
+                        marginBottom: '10px' 
+                    }}>
+                        {error}
+                    </div>
+                }
+                <a 
+                    href="?"
+                    style={{
+                        marginTop: '5px',
+                        fontSize: '15px',
+                    }}
+                >
+                    Forgot Password?
+                </a>
+                <input
+                    type="submit"
+                    id="loginButton"
+                    className="btn btn-primary buttons"
+                    value={isLoading ? "Logging in..." : "Login"}
+                    style={{ 
+                        fontSize: '28px', 
+                        borderRadius: '25px', 
+                        width: '55%',
+                        margin: '0 auto', 
+                        display: 'block',
+                        backgroundColor: 'darkgreen',
+                        cursor: isLoading ? 'not-allowed' : 'pointer',
+                        opacity: isLoading ? 0.7 : 1
+                    }}
+                    disabled={isLoading}
+                />
+                <p
+                    style={{
+                        marginTop: '10px',
+                        fontSize: '16px',
+                    }}
+                >
+                    Don't have an account?{' '}
+                    <span
+                        onClick={() => !isLoading && navigate('/register')}
+                        style={{
+                            color: 'blue',
+                            textDecoration: 'underline',
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            opacity: isLoading ? 0.5 : 1
+                        }}
+                    >
+                        Register here
+                    </span>
+                </p>
+                <span id="loginResult"></span>
+            </form>
+            
+            <div
                 style={{
-                    marginTop: '5px',
-                    fontSize: '15px',
+                    position: 'absolute',
+                    bottom: '8px',
+                    right: '12px',
+                    color: 'rgba(255,255,255,0.85)',
+                    fontSize: '12px',
+                    textAlign: 'right',
+                    fontStyle: 'italic',
                 }}
             >
-                Forgot Password?
-            </a>
-            <input
-                type="submit"
-                id="loginButton"
-                className="btn btn-primary buttons"
-                value="Login"
-                style={{ 
-                    fontSize: '28px', 
-                    borderRadius: '25px', 
-                    width: '55%',
-                    margin: '0 auto', 
-                    display: 'block',
-                    backgroundColor: 'darkgreen' }}
-            />
-            <p
-                style={{
-                    marginTop: '10px',
-                    fontSize: '16px',
-                }}
-            >
-                Don’t have an account?{' '}
-            <span
-                //onClick={() => navigate('/register')}
-                style={{
-                    color: 'blue',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                }}
-            >
-                Register here
-            </span>
-            </p>
-            <span id="loginResult"></span>
-        </form>
-        
-        <div
-            style={{
-            position: 'absolute',
-            bottom: '8px',
-            right: '12px',
-            color: 'rgba(255,255,255,0.85)',
-            fontSize: '12px',
-            textAlign: 'right',
-            fontStyle: 'italic',
-            }}
-        >
-            Photo from Getty Images
+                Photo from Getty Images
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default Login;

@@ -1,0 +1,272 @@
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import ReviewsList from './ReviewsList';
+import ReviewForm from './ReviewForm';
+
+interface RatingSet {
+    views: number;
+    location: number;
+    amenities: number;
+    overall: number;
+}
+
+interface Review {
+    _id: string;
+    ratings: RatingSet;
+    comment: string;
+    userId: string;
+    createdAt: string;
+}
+
+interface Park {
+    _id: string;
+    name: string;
+    counties: string[];
+    image_url: string;
+    park_page: string;
+    averageRatings?: RatingSet;
+    totalRatings?: number;
+}
+
+const ParkDetails: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const [park, setPark] = useState<Park | null>(null);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>('');
+
+    const fetchParkDetails = async () => {
+        try {
+            const parkResponse = await axios.get(`http://localhost:5000/api/parks/${id}`);
+            setPark(parkResponse.data);
+
+            const reviewsResponse = await axios.get(`http://localhost:5000/api/parks/${id}/reviews`);
+            setReviews(reviewsResponse.data);
+        } catch (err) {
+            console.error('Error fetching park details:', err);
+            setError('Failed to load park details.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchParkDetails();
+    }, [id]);
+
+    const handleReviewSubmitted = () => {
+        // Refresh the reviews and park data after submission
+        fetchParkDetails();
+    };
+
+    if (loading) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '400px',
+                fontSize: '18px',
+                color: '#6c757d'
+            }}>
+                Loading park details...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{
+                maxWidth: '600px',
+                margin: '40px auto',
+                padding: '20px',
+                backgroundColor: '#fff3cd',
+                border: '1px solid #ffc107',
+                borderRadius: '8px',
+                color: '#856404'
+            }}>
+                {error}
+            </div>
+        );
+    }
+
+    if (!park) {
+        return (
+            <div style={{
+                maxWidth: '600px',
+                margin: '40px auto',
+                padding: '20px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                textAlign: 'center',
+                color: '#6c757d'
+            }}>
+                Park not found.
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ 
+            maxWidth: '1000px', 
+            margin: '0 auto', 
+            padding: '20px',
+            backgroundColor: '#f8f9fa',
+            minHeight: '100vh'
+        }}>
+            {/* Park Header Card */}
+            <div style={{
+                backgroundColor: '#fff',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                overflow: 'hidden',
+                marginBottom: '30px'
+            }}>
+                {/* Park Image */}
+                <img 
+                    src={park.image_url} 
+                    alt={park.name} 
+                    style={{ 
+                        width: '100%', 
+                        height: '400px',
+                        objectFit: 'cover'
+                    }} 
+                />
+                
+                {/* Park Info */}
+                <div style={{ padding: '30px' }}>
+                    <h1 style={{ 
+                        fontSize: '36px', 
+                        fontWeight: 'bold', 
+                        color: '#2c3e50',
+                        marginBottom: '20px',
+                        marginTop: 0
+                    }}>
+                        {park.name}
+                    </h1>
+                    
+                    <div style={{
+                        display: 'flex',
+                        gap: '30px',
+                        flexWrap: 'wrap',
+                        marginBottom: '20px'
+                    }}>
+                        <div>
+                            <span style={{ 
+                                fontSize: '14px', 
+                                color: '#6c757d',
+                                display: 'block',
+                                marginBottom: '4px'
+                            }}>
+                                Counties
+                            </span>
+                            <span style={{ 
+                                fontSize: '16px', 
+                                color: '#2c3e50',
+                                fontWeight: '500'
+                            }}>
+                                {park.counties.join(', ')}
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <span style={{ 
+                                fontSize: '14px', 
+                                color: '#6c757d',
+                                display: 'block',
+                                marginBottom: '4px'
+                            }}>
+                                Total Ratings
+                            </span>
+                            <span style={{ 
+                                fontSize: '16px', 
+                                color: '#2c3e50',
+                                fontWeight: '500'
+                            }}>
+                                {park.totalRatings || 'No ratings yet'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Average Ratings */}
+                    {park.averageRatings && (
+                        <div style={{ marginTop: '30px' }}>
+                            <h3 style={{ 
+                                fontSize: '20px', 
+                                fontWeight: 'bold', 
+                                color: '#2c3e50',
+                                marginBottom: '16px'
+                            }}>
+                                Average Ratings
+                            </h3>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                                gap: '12px',
+                                padding: '20px',
+                                backgroundColor: '#f8f9fa',
+                                borderRadius: '8px'
+                            }}>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Views</div>
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
+                                        {park.averageRatings.views.toFixed(1)}⭐
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Location</div>
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
+                                        {park.averageRatings.location.toFixed(1)}⭐
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Amenities</div>
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
+                                        {park.averageRatings.amenities.toFixed(1)}⭐
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Overall</div>
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#27ae60' }}>
+                                        {park.averageRatings.overall.toFixed(1)}⭐
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Visit Park Link */}
+                    <a 
+                        href={park.park_page} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={{
+                            display: 'inline-block',
+                            marginTop: '24px',
+                            padding: '12px 24px',
+                            backgroundColor: '#27ae60',
+                            color: '#fff',
+                            textDecoration: 'none',
+                            borderRadius: '6px',
+                            fontWeight: '500',
+                            transition: 'background-color 0.2s'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#229954'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#27ae60'}
+                    >
+                        Visit Official Park Page →
+                    </a>
+                </div>
+            </div>
+
+            {/* Review Form */}
+            {id && <ReviewForm parkId={id} onReviewSubmitted={handleReviewSubmitted} />}
+
+            {/* Reviews Section */}
+            <ReviewsList reviews={reviews} />
+        </div>
+    );
+};
+
+export default ParkDetails;
