@@ -74,7 +74,7 @@ const Register: React.FC = () => {
 
   return (
     <div style={backgroundStyle}>
-        <form id="loginDiv" onSubmit={doRegister} className="text-center">
+        <form id="registerDiv" onSubmit={doRegister} className="text-center">
             <span id="inner-title">Register</span>
             <br />
             <input
@@ -167,7 +167,7 @@ const Register: React.FC = () => {
                 className="btn btn-primary buttons"
                 value="Register"
                 style={{ 
-                    fontSize: '28px', 
+                    fontSize: '25px', 
                     borderRadius: '25px', 
                     width: '55%',
                     margin: '0 auto', 
