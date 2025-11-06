@@ -7,20 +7,20 @@ module.exports = function (db) {
     const users = db.collection('Users');
 
     router.post('/login', async (req, res) => {
-        let { login, password } = req.body;
+        let { email, password } = req.body;
 
         // Trims all fields
-        [login, password] = [login, password].map(f => f?.trim());
+        [email, password] = [email, password].map(f => f?.trim());
 
         // Check inputs
-        if (!login || !password) {
+        if (!email || !password) {
             return res.status(400).json({
                 error: 'Missing login or password'
             });
         }
 
         try {
-            const user = await users.findOne({ Login: login });
+            const user = await users.findOne({ Email: email });
 
             // Username not found
             if (!user) {
@@ -43,7 +43,7 @@ module.exports = function (db) {
             const token = jwt.sign(
                 { 
                     userId: user.UserID || user._id.toString(),
-                    login: user.Login,
+                    email: user.Email,
                     firstName: user.FirstName,
                     lastName: user.LastName
                 },

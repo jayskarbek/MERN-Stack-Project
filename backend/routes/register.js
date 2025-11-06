@@ -9,18 +9,18 @@ module.exports = function (db) {
 
     router.post('/register', async (req, res) => {
         try {
-            let { login, password, firstName, lastName } = req.body;
+            let { email, password, firstName, lastName } = req.body;
 
             // Trims all fields
-            [login, password, firstName, lastName] = [login, password, firstName, lastName].map(f => f?.trim());
+            [email, password, firstName, lastName] = [email, password, firstName, lastName].map(f => f?.trim());
 
             // Check inputs
-            if (!login || !password || !firstName || !lastName) {
+            if (!email || !password || !firstName || !lastName) {
                 return res.status(400).json({ error: 'All fields are required' });
             }
 
             // Check if username is taken
-            const existingUser = await users.findOne({ Login: login });
+            const existingUser = await users.findOne({ Email: email });
             if (existingUser) {
                 return res.status(409).json({ error: 'Username already taken' });
             }
@@ -30,10 +30,10 @@ module.exports = function (db) {
 
             // Insert into database
             const result = await users.insertOne({
-                Login: login,
                 Password: hashedPassword,
                 FirstName: firstName,
-                LastName: lastName
+                LastName: lastName,
+                Email: email
             });
 
             // Register successful
