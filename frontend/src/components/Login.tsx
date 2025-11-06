@@ -14,7 +14,6 @@ const Login: React.FC = () => {
     function buildPath(route: string) {
         return `http://localhost:5000/${route}`;
     }
-
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         

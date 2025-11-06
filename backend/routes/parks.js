@@ -1,11 +1,15 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
+<<<<<<< HEAD
 const authenticateToken = require('../middleware/auth');
+=======
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
 
 module.exports = function (db) {
     const router = express.Router();
     const parksCollection = db.collection('Parks');
     const reviewsCollection = db.collection('Reviews');
+<<<<<<< HEAD
     const usersCollection = db.collection('Users');
 
     // Helper function to calculate average ratings for a park
@@ -68,17 +72,30 @@ async function calculateParkRatings(parkId) {
             );
             
             res.status(200).json(parksWithRatings);
+=======
+
+    // Get all parks
+    router.get('/parks', async (req, res) => {
+        try {
+            const parks = await parksCollection.find().toArray();
+            res.status(200).json(parks);
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
         } catch (err) {
             console.error('Error fetching parks:', err);
             res.status(500).json({ error: 'Failed to fetch parks' });
         }
     });
 
+<<<<<<< HEAD
     // Get a specific park by ID with ratings (Public - No authentication required)
+=======
+    // Get a specific park by ID
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
     router.get('/parks/:id', async (req, res) => {
         try {
             const park = await parksCollection.findOne({ _id: new ObjectId(req.params.id) });
             if (!park) return res.status(404).json({ error: 'Park not found' });
+<<<<<<< HEAD
             
             // Add ratings to the park
             const ratings = await calculateParkRatings(park._id);
@@ -87,22 +104,37 @@ async function calculateParkRatings(parkId) {
                 ...park,
                 ...ratings
             });
+=======
+            res.status(200).json(park);
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
         } catch (err) {
             console.error('Error fetching park:', err);
             res.status(500).json({ error: 'Failed to fetch park' });
         }
     });
 
+<<<<<<< HEAD
     // Get reviews for a specific park (Public - No authentication required)
     router.get('/parks/:id/reviews', async (req, res) => {
         try {
             const parkId = req.params.id;
             console.log('Fetching reviews for parkId:', parkId);
+=======
+    // Get reviews for a specific park
+    router.get('/parks/:id/reviews', async (req, res) => {
+        try {
+            const parkId = req.params.id;
+            console.log('Fetching reviews for parkId:', parkId); // Debug log
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
             const reviews = await reviewsCollection
                 .find({ parkId })
                 .sort({ createdAt: -1 })
                 .toArray();
+<<<<<<< HEAD
             console.log('Found reviews:', reviews.length);
+=======
+            console.log('Found reviews:', reviews.length); // Debug log
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
             res.status(200).json(reviews);
         } catch (err) {
             console.error('Error fetching reviews:', err);
@@ -110,6 +142,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
+<<<<<<< HEAD
     // Add a new review for a park (Protected - Requires authentication)
     router.post('/parks/:id/reviews', authenticateToken, async (req, res) => {
         try {
@@ -142,11 +175,51 @@ async function calculateParkRatings(parkId) {
                 userId,
                 userName,
                 ratings,
+=======
+    // Add a new review for a park
+    router.post('/parks/:id/reviews', async (req, res) => {
+        try {
+            const parkId = req.params.id;
+            const { ratings, comment, userId } = req.body;
+
+            // Validate inputs
+            if (!ratings || !ratings.views || !ratings.location || !ratings.amenities) {
+                return res.status(400).json({ 
+                    error: 'All ratings (views, location, amenities) are required' 
+                });
+            }
+
+            if (!comment) {
+                return res.status(400).json({ error: 'Comment is required' });
+            }
+
+            // Validate all ratings are between 1-5
+            const ratingValues = [ratings.views, ratings.location, ratings.amenities];
+            if (ratingValues.some(r => r < 1 || r > 5)) {
+                return res.status(400).json({ 
+                    error: 'All ratings must be between 1 and 5' 
+                });
+            }
+
+            // Calculate overall rating
+            const overallRating = (ratings.views + ratings.location + ratings.amenities) / 3;
+
+            const newReview = {
+                parkId,
+                userId: userId || 'anonymous',
+                ratings: {
+                    views: Number(ratings.views),
+                    location: Number(ratings.location),
+                    amenities: Number(ratings.amenities),
+                    overall: Number(overallRating.toFixed(1))
+                },
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
                 comment,
                 createdAt: new Date(),
             };
 
             const result = await reviewsCollection.insertOne(newReview);
+<<<<<<< HEAD
             res.status(201).json({ ...newReview, _id: result.insertedId });
         } catch (err) {
             console.error('Error creating review:', err);
@@ -218,6 +291,14 @@ async function calculateParkRatings(parkId) {
         } catch (err) {
             console.error('Error deleting review:', err);
             res.status(500).json({ error: 'Failed to delete review' });
+=======
+            
+            const createdReview = { ...newReview, _id: result.insertedId };
+            res.status(201).json(createdReview);
+        } catch (err) {
+            console.error('Error adding review:', err);
+            res.status(500).json({ error: 'Failed to add review' });
+>>>>>>> a3614589a1533beab59ef8eae3ef0100eaa81ce5
         }
     });
 
