@@ -120,15 +120,24 @@ const Login: React.FC = () => {
                         {error}
                     </div>
                 }
-                <a 
-                    href="?"
+                <p
                     style={{
-                        marginTop: '5px',
-                        fontSize: '15px',
+                        marginTop: '10px',
+                        fontSize: '16px',
                     }}
                 >
-                    Forgot Password?
-                </a>
+                    <span
+                        onClick={() => !isLoading && navigate('/forgotpass')}
+                        style={{
+                            color: 'blue',
+                            textDecoration: 'underline',
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            opacity: isLoading ? 0.5 : 1
+                        }}
+                    >
+                        Forgot Password?
+                    </span>
+                </p>
                 <input
                     type="submit"
                     id="loginButton"
