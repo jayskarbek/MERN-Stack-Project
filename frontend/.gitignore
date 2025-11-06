@@ -7,15 +7,25 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependency directories
+node_modules/
+dist/
+dist-ssr/
+
+# Environment files
+.env
+*.env
+.env.local
+
+# Build artifacts
+*.tsbuildinfo
+*.tmp
+*.cache
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -23,7 +33,15 @@ dist-ssr
 *.sln
 *.sw?
 
-# For .env file
-.env
-*.env
-.env.local
+# OS-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE-specific files
+*.iml
+*.ipr
+*.iws
+
+# TypeScript
+*.d.ts
