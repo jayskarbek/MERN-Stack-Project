@@ -14,11 +14,7 @@ const ipaddress = 'http://134.199.193.253:5100/'
 
 // App setup
 app.use(cors({
-<<<<<<< Updated upstream
     origin: ipaddress,
-=======
-    origin: 'http://localhost:5101', // Replace with your frontend's origin
->>>>>>> Stashed changes
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 }));
@@ -57,13 +53,7 @@ const parksRoute = require('./routes/parks')(db);
 app.use('/api', parksRoute);
 
 // Starts the server
-<<<<<<< Updated upstream
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-=======
-app.listen(5050, () => {
-    console.log('Server running on port 5000');
-});
->>>>>>> Stashed changes
