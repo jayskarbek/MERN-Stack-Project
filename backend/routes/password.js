@@ -1,0 +1,84 @@
+const express = require('express');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+
+module.exports = function (db) {
+    const router = express.Router();
+    const users = db.collection('Users');
+
+    router.post('/forgotpass', async (req, res) => {
+        try {
+            const { email } = req.body;
+            if (!email) return res.status(400).json({ error: "Email is required"})
+
+            const user = await users.findOne({ Email: email });
+
+            // email not found
+            if (!user) {
+                return res.status(401).json({
+                    error: 'No email found for this account'
+                });
+            }
+
+            const token = crypto.randomBytes(32).toString('hex');
+            
+            await users.updateOne( 
+                { Email: email }, 
+                { $set: {
+                    resetToken: token,
+                    resetTokenExp: Date.now() + 15 * 60 * 1000 //15 minutes
+                    }
+                }
+            )
+
+            const resetLink = `http://localhost:5101/reset-password?token=${resetToken}&email=${email}`;
+            await transporter.sendMail({
+                to: email,
+                subject: 'Password Reset',
+                html: '<p> Click <a href ="${resetLink}" here</a> to reset your password.</p> <p>This link will expire in 15 minutes. </p>'
+            })
+
+            res.json({ message: 'Reset password link set to email.' });
+        } catch (err) {
+            console.error('Forgot Password Error:', err);
+            res.status(500).json({
+                error: 'Server error'
+            });
+        }
+    });
+
+    router.post('/resetpass', async (req, res) => {
+        try {
+            const { email, token, newPassword } = req.body;
+
+            const user = await users.findOne({ Email: email });
+
+            if (!user || user.resetToken !== token) {
+                return res.status(400).json({ error: 'Invalid or expired reset token.' });
+            }
+
+            if (Date.now() > user.resetTokenExpiry) {
+                return res.status(400).json({ error: 'Reset token has expired.' });
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update password and clear token fields
+            await users.updateOne(
+                { Email: email },
+                { 
+                $set: { Password: hashedPassword },
+                $unset: { resetToken: '', resetTokenExpiry: '' }
+                }
+            );
+
+            res.json({ message: 'Password has been reset successfully!' });
+        } catch (err) {
+            console.error('Reset Password Error:', err);
+            res.status(500).json({ error: 'Server error. Please try again later.' });
+        }
+    });
+
+    return router;
+}
