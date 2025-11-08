@@ -52,6 +52,9 @@ app.use('/api', registerRoute);
 const parksRoute = require('./routes/parks')(db);
 app.use('/api', parksRoute);
 
+const passwordRoute = require('./routes/password')(db);
+app.use('/api', passwordRoute);
+
 // Starts the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
