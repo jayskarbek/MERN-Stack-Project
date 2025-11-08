@@ -1,24 +1,40 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 
-const Login: React.FC = () => {
+const ResetPassword: React.FC = () => {
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const email = searchParams.get('email');
+    const token = searchParams.get('token');
+
+    useEffect(() => {
+        if (!email || !token) {
+            setError('Invalid or missing reset link.');
+        }
+    }, [email, token]);
 
     function buildPath(route: string) {
         return `http://localhost:5000/${route}`;
     }
-    /*async function changePass(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+    async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
-        if (!login || !password) {
-            setError("Please fill out all forms");
+        if (!password || !confirmPassword) {
+            setError('Please fill out both password fields.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
             return;
         }
 
@@ -26,9 +42,9 @@ const Login: React.FC = () => {
         setError('');
 
         try { 
-            const response = await fetch(buildPath('api/login'), {
+            const response = await fetch(buildPath('api/resetpass'), {
                 method: 'POST',
-                body: JSON.stringify({ login, password }),
+                body: JSON.stringify({ email, token, newPassword: password }),
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -36,21 +52,15 @@ const Login: React.FC = () => {
 
             if (!response.ok) {
                 // Handle error responses
-                setError(res.error || 'Invalid username or password');
+                setError(res.error);
                 setIsLoading(false);
                 return;
             }
 
-            // Login successful - Store JWT token and user info
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('userId', res.id);
-            localStorage.setItem('firstName', res.firstName);
-            localStorage.setItem('lastName', res.lastName);
-
-            console.log('Login successful:', res);
+            setSuccess('Password has been reset successfully!');
+            console.log('Reset Password Success:', res);
             
-            // Navigate to the card page
-            navigate('/CardPage');
+            setTimeout(() => navigate('/login'), 2000);
             
         } catch (err) {
             console.error('Fetch error:', err);
@@ -58,7 +68,7 @@ const Login: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }*/
+    }
 
     const backgroundStyle: React.CSSProperties = {
         backgroundImage: `url(${backgroundImage})`,
@@ -76,8 +86,8 @@ const Login: React.FC = () => {
 
     return (
         <div style={backgroundStyle}>
-            <form id="loginDiv" onSubmit={changePass} className="text-center">
-                <span id="inner-title">Login</span>
+            <form id="loginDiv" onSubmit={passReset} className="text-center">
+                <span id="inner-title">Reset Password</span>
                 <br />
                 <input
                     type="password"
@@ -124,7 +134,7 @@ const Login: React.FC = () => {
                     type="submit"
                     id="loginButton"
                     className="btn btn-primary buttons"
-                    value={isLoading ? "Logging in..." : "Login"}
+                    value={isLoading ? "Updating..." : "Reset Password"}
                     style={{ 
                         fontSize: '28px', 
                         borderRadius: '25px', 
@@ -157,4 +167,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default ResetPassword;

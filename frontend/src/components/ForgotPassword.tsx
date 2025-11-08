@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ForgotPassword.css';
 
 const ForgotPassword: React.FC = () => {
-    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -17,20 +16,15 @@ const ForgotPassword: React.FC = () => {
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
-        /*if (!login || !password || !firstName || !lastName) {
-            setError("Please fill out all forms");
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            setError("Passwords do not match");
+        if (!email) {
+            setError("Please enter your email");
             return;
         }
 
         try {
             const response = await fetch(buildPath('api/forgotpass'), {
                 method: 'POST',
-                body: JSON.stringify({ login, password, firstName, lastName }),
+                body: JSON.stringify({ email }),
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -43,16 +37,13 @@ const ForgotPassword: React.FC = () => {
             }
 
             setError('');
-            setSuccess('Registration Successful! ');
-            console.log('Registered user:', res.user);
-
-            setTimeout(() => navigate('/login'), 2000);
+            setSuccess('Password reset link sent to your email!');
 
         } catch (err) {
             console.error('Fetch error:', err);
             setError('Error connecting to the server');
             setSuccess('');
-        }*/
+        }
     }
 
     const backgroundStyle: React.CSSProperties = {

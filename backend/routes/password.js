@@ -32,11 +32,20 @@ module.exports = function (db) {
                 }
             )
 
-            const resetLink = `http://localhost:5101/reset-password?token=${resetToken}&email=${email}`;
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'user@gmail.com',
+                    pass: 'a password'
+                }
+            });
+
+            const resetLink = `http://localhost:5101/resetpass?token=${token}&email=${email}`;
             await transporter.sendMail({
                 to: email,
                 subject: 'Password Reset',
-                html: '<p> Click <a href ="${resetLink}" here</a> to reset your password.</p> <p>This link will expire in 15 minutes. </p>'
+                html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>
+                    <p>This link will expire in 15 minutes.</p>`
             })
 
             res.json({ message: 'Reset password link set to email.' });
@@ -58,7 +67,7 @@ module.exports = function (db) {
                 return res.status(400).json({ error: 'Invalid or expired reset token.' });
             }
 
-            if (Date.now() > user.resetTokenExpiry) {
+            if (Date.now() > user.resetTokenExp) {
                 return res.status(400).json({ error: 'Reset token has expired.' });
             }
 
@@ -66,10 +75,10 @@ module.exports = function (db) {
 
             // Update password and clear token fields
             await users.updateOne(
-                { Email: email },
+            { Email: email },
                 { 
                 $set: { Password: hashedPassword },
-                $unset: { resetToken: '', resetTokenExpiry: '' }
+                $unset: { resetToken: '', resetTokenExp: '' }
                 }
             );
 

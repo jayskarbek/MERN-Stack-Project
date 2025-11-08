@@ -6,7 +6,7 @@ import './Register.css';
 
 const Register: React.FC = () => { 
     const navigate = useNavigate();
-    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -21,7 +21,7 @@ const Register: React.FC = () => {
     async function doRegister(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
-        if (!login || !password || !firstName || !lastName) {
+        if (!email || !password || !firstName || !lastName) {
             setError("Please fill out all forms");
             return;
         }
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
         try {
             const response = await fetch(buildPath('api/register'), {
                 method: 'POST',
-                body: JSON.stringify({ login, password, firstName, lastName }),
+                body: JSON.stringify({ email, password, firstName, lastName }),
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -50,7 +50,8 @@ const Register: React.FC = () => {
             setSuccess('Registration Successful! ');
             console.log('Registered user:', res.user);
 
-            setTimeout(() => navigate('/login'), 2000);
+            //setTimeout(() => navigate('/verifyemail'), 2000);
+            //setTimeout(() => navigate('/login'), 2000);
 
         } catch (err) {
             console.error('Fetch error:', err);
@@ -116,8 +117,8 @@ const Register: React.FC = () => {
                     borderRadius: '25px', 
                     backgroundColor: 'rgba(255,255,255,0.6)', 
                     textAlign: 'center' }}
-                value={login}
-                onChange={e => setLogin(e.target.value)}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
             />
             <input
                 type="password"

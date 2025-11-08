@@ -6,7 +6,7 @@ import './Login.css';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
-        if (!login || !password) {
+        if (!email || !password) {
             setError("Please fill out all forms");
             return;
         }
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
         try { 
             const response = await fetch(buildPath('api/login'), {
                 method: 'POST',
-                body: JSON.stringify({ login, password }),
+                body: JSON.stringify({ email, password }),
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -91,8 +91,8 @@ const Login: React.FC = () => {
                         backgroundColor: 'rgba(255,255,255,0.6)', 
                         textAlign: 'center' 
                     }}
-                    value={login}
-                    onChange={e => setLogin(e.target.value)}
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     disabled={isLoading}
                 />
                 <input

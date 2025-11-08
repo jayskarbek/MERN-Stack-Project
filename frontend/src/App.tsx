@@ -6,6 +6,7 @@ import CardPage from './pages/CardPage.tsx';
 import ParkDetailsPage from './pages/ParkDetailsPage.tsx';
 import { auth } from './utils/auth';
 import ForgotPassPage from './pages/ForgotPassPage.tsx';
+import ResetPassPage from './pages/ResetPassPage.tsx';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgotpass" element={<ForgotPassPage />} />
+            <Route path="/resetpass" element={<ResetPassPage />} />
             <Route 
                 path="/CardPage" 
                 element={
