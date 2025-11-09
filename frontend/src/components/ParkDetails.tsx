@@ -8,7 +8,6 @@ interface RatingSet {
     views: number;
     location: number;
     amenities: number;
-    overall: number;
 }
 
 interface Review {
@@ -25,8 +24,9 @@ interface Park {
     counties: string[];
     image_url: string;
     park_page: string;
-    averageRatings?: RatingSet;
-    totalRatings?: number;
+    averageRating?: number;
+    reviewCount?: number;
+    ratingBreakdown?: RatingSet;
 }
 
 const ParkDetails: React.FC = () => {
@@ -184,13 +184,13 @@ const ParkDetails: React.FC = () => {
                                 color: '#2c3e50',
                                 fontWeight: '500'
                             }}>
-                                {park.totalRatings || 'No ratings yet'}
+                                {park.reviewCount || 'No ratings yet'}
                             </span>
                         </div>
                     </div>
 
                     {/* Average Ratings */}
-                    {park.averageRatings && (
+                    {park.ratingBreakdown && park.reviewCount && park.reviewCount > 0 && (
                         <div style={{ marginTop: '30px' }}>
                             <h3 style={{ 
                                 fontSize: '20px', 
@@ -210,26 +210,30 @@ const ParkDetails: React.FC = () => {
                             }}>
                                 <div style={{ textAlign: 'center' }}>
                                     <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Views</div>
-                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
-                                        {park.averageRatings.views.toFixed(1)}⭐
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                                        <span style={{ color: '#2c3e50' }}>{park.ratingBreakdown.views.toFixed(1)}</span>
+                                        <span style={{ color: '#f1c40f' }}>★</span>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }}>
                                     <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Location</div>
-                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
-                                        {park.averageRatings.location.toFixed(1)}⭐
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                                        <span style={{ color: '#2c3e50' }}>{park.ratingBreakdown.location.toFixed(1)}</span>
+                                        <span style={{ color: '#f1c40f' }}>★</span>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }}>
                                     <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Amenities</div>
-                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>
-                                        {park.averageRatings.amenities.toFixed(1)}⭐
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                                        <span style={{ color: '#2c3e50' }}>{park.ratingBreakdown.amenities.toFixed(1)}</span>
+                                        <span style={{ color: '#f1c40f' }}>★</span>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }}>
                                     <div style={{ fontSize: '14px', color: '#6c757d', marginBottom: '4px' }}>Overall</div>
-                                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#27ae60' }}>
-                                        {park.averageRatings.overall.toFixed(1)}⭐
+                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                                        <span style={{ color: '#2c3e50' }}>{park.averageRating?.toFixed(1)}</span>
+                                        <span style={{ color: '#f1c40f' }}>★</span>
                                     </div>
                                 </div>
                             </div>
@@ -264,7 +268,7 @@ const ParkDetails: React.FC = () => {
             {id && <ReviewForm parkId={id} onReviewSubmitted={handleReviewSubmitted} />}
 
             {/* Reviews Section */}
-            <ReviewsList reviews={reviews} />
+            <ReviewsList reviews={reviews} onReviewUpdated={fetchParkDetails} parkId={id || ''} />
         </div>
     );
 };
