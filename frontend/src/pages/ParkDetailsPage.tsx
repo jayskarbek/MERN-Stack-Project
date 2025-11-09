@@ -1,5 +1,5 @@
-import ParkDetails from '../components/ParkDetails.tsx'; 
-import LoggedInName from '../components/LoggedInName.tsx';
+import ParkDetails from '../components/ParkDetails'; 
+import LoggedInName from '../components/LoggedInName';
 
 const ParkDetailsPage = () => {
     return (
