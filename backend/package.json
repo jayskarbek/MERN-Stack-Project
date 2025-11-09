@@ -7,16 +7,28 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
+    "test:watch": "jest --watch",
     "dev": "nodemon ./server.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["/node_modules/"],
+    "testTimeout": 30000
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "express.js": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0",
     "nodemailer": "^7.0.10"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "mongodb-memory-server": "^9.1.6"
   }
 }
