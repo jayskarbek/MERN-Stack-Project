@@ -73,40 +73,6 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Get parks that the user has reviewed (Protected - Requires authentication)
-    router.get('/my-reviewed-parks', authenticateToken, async (req, res) => {
-        try {
-            const userId = req.user.userId;
-            
-            const userReviews = await reviewsCollection.find({ userId }).toArray();
-            
-            const parkIds = [...new Set(userReviews.map(review => review.parkId))];
-            
-            if (parkIds.length === 0) {
-                return res.status(200).json([]);
-            }
-            
-            const reviewedParks = await parksCollection.find({ 
-                _id: { $in: parkIds.map(id => new ObjectId(id)) }
-            }).toArray();
-            
-            const parksWithRatings = await Promise.all(
-                reviewedParks.map(async (park) => {
-                    const ratings = await calculateParkRatings(park._id);
-                    return {
-                        ...park,
-                        ...ratings
-                    };
-                })
-            );
-            
-            res.status(200).json(parksWithRatings);
-        } catch (err) {
-            console.error('Error fetching reviewed parks:', err);
-            res.status(500).json({ error: 'Failed to fetch reviewed parks' });
-        }
-    });
-
     // Get a specific park by ID with ratings (Public - No authentication required)
     router.get('/parks/:id', async (req, res) => {
         try {
@@ -157,12 +123,22 @@ async function calculateParkRatings(parkId) {
             }
 
             // Fetch the user's name from the Users collection
-            const user = await usersCollection.findOne({ 
-                $or: [
-                    { _id: new ObjectId(userId) },
-                    { UserID: userId }
-                ]
-            });
+            // Check if userId is a valid ObjectId format (24 hex characters)
+            const isValidObjectId = ObjectId.isValid(userId) && /^[0-9a-fA-F]{24}$/.test(userId);
+            
+            let user;
+            if (isValidObjectId) {
+                // Try both _id and UserID fields for ObjectId
+                user = await usersCollection.findOne({ 
+                    $or: [
+                        { _id: new ObjectId(userId) },
+                        { UserID: userId }
+                    ]
+                });
+            } else {
+                // For non-ObjectId strings, only search UserID field
+                user = await usersCollection.findOne({ UserID: userId });
+            }
 
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
