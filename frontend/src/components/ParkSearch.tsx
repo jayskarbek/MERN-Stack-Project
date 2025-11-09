@@ -1,4 +1,5 @@
 import React from 'react';
+import { auth } from '../utils/auth';
 
 interface ParkSearchFilterProps {
     searchTerm: string;
@@ -12,6 +13,8 @@ interface ParkSearchFilterProps {
     totalCount: number;
     onClearFilters: () => void;
     showClearButton: boolean;
+    showMyReviews: boolean;
+    setShowMyReviews: (value: boolean) => void;
 }
 
 const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
@@ -25,8 +28,12 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
     resultsCount,
     totalCount,
     onClearFilters,
-    showClearButton
+    showClearButton,
+    showMyReviews,
+    setShowMyReviews
 }) => {
+    const isAuthenticated = auth.isAuthenticated();
+
     return (
         <div style={{
             backgroundColor: '#fff',
@@ -205,6 +212,43 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 )}
             </div>
 
+            {/* My Reviews Toggle */}
+            {isAuthenticated && (
+                <div style={{
+                    marginTop: '20px',
+                    padding: '16px',
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                }}>
+                    <input
+                        type="checkbox"
+                        id="myReviewsFilter"
+                        checked={showMyReviews}
+                        onChange={(e) => setShowMyReviews(e.target.checked)}
+                        style={{
+                            width: '20px',
+                            height: '20px',
+                            cursor: 'pointer'
+                        }}
+                    />
+                    <label 
+                        htmlFor="myReviewsFilter"
+                        style={{
+                            fontSize: '15px',
+                            fontWeight: '500',
+                            color: '#2c3e50',
+                            cursor: 'pointer',
+                            userSelect: 'none'
+                        }}
+                    >
+                        Show only parks I've reviewed
+                    </label>
+                </div>
+            )}
+
             {/* Results Count */}
             <div style={{
                 marginTop: '16px',
@@ -221,6 +265,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     <strong style={{ color: '#27ae60' }}>{resultsCount}</strong> 
                     {' '}park{resultsCount !== 1 ? 's' : ''} found
                     {searchTerm && ` for "${searchTerm}"`}
+                    {showMyReviews && ' (your reviews)'}
                 </span>
                 {totalCount > 0 && (
                     <span style={{ fontSize: '13px' }}>

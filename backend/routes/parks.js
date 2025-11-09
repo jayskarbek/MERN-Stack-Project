@@ -40,7 +40,7 @@ async function calculateParkRatings(parkId) {
     const overallAverage = (avgViews + avgLocation + avgAmenities) / 3;
 
     return {
-        averageRating: Math.round(overallAverage * 10) / 10, // Round to 1 decimal, out of 5
+        averageRating: Math.round(overallAverage * 10) / 10,
         reviewCount: count,
         ratingBreakdown: {
             views: Math.round(avgViews * 10) / 10,
@@ -70,6 +70,40 @@ async function calculateParkRatings(parkId) {
         } catch (err) {
             console.error('Error fetching parks:', err);
             res.status(500).json({ error: 'Failed to fetch parks' });
+        }
+    });
+
+    // Get parks that the user has reviewed (Protected - Requires authentication)
+    router.get('/my-reviewed-parks', authenticateToken, async (req, res) => {
+        try {
+            const userId = req.user.userId;
+            
+            const userReviews = await reviewsCollection.find({ userId }).toArray();
+            
+            const parkIds = [...new Set(userReviews.map(review => review.parkId))];
+            
+            if (parkIds.length === 0) {
+                return res.status(200).json([]);
+            }
+            
+            const reviewedParks = await parksCollection.find({ 
+                _id: { $in: parkIds.map(id => new ObjectId(id)) }
+            }).toArray();
+            
+            const parksWithRatings = await Promise.all(
+                reviewedParks.map(async (park) => {
+                    const ratings = await calculateParkRatings(park._id);
+                    return {
+                        ...park,
+                        ...ratings
+                    };
+                })
+            );
+            
+            res.status(200).json(parksWithRatings);
+        } catch (err) {
+            console.error('Error fetching reviewed parks:', err);
+            res.status(500).json({ error: 'Failed to fetch reviewed parks' });
         }
     });
 

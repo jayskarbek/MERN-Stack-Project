@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import StateParkCard from './StateParkCard';
 import ParkSearchFilter from './ParkSearch';
+import { auth } from '../utils/auth';
 
 interface Park {
     _id: string;
@@ -17,13 +18,16 @@ type SortOption = 'name-asc' | 'name-desc' | 'county-asc' | 'county-desc' | 'rat
 
 const StateParkList: React.FC = () => {
     const [parks, setParks] = useState<Park[]>([]);
+    const [reviewedParks, setReviewedParks] = useState<Park[]>([]);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
+    const [loadingReviewed, setLoadingReviewed] = useState<boolean>(false);
     
     // Search and filter states
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [sortBy, setSortBy] = useState<SortOption>('name-asc');
     const [selectedCounty, setSelectedCounty] = useState<string>('all');
+    const [showMyReviews, setShowMyReviews] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchParks() {
@@ -41,15 +45,44 @@ const StateParkList: React.FC = () => {
         fetchParks();
     }, []);
 
+    useEffect(() => {
+        async function fetchReviewedParks() {
+            if (!showMyReviews || !auth.isAuthenticated()) {
+                return;
+            }
+
+            setLoadingReviewed(true);
+            try {
+                const token = auth.getToken();
+                const response = await axios.get('http://localhost:5000/api/my-reviewed-parks', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setReviewedParks(response.data);
+            } catch (err) {
+                console.error('Error fetching reviewed parks:', err);
+                setError('Failed to load your reviewed parks.');
+            } finally {
+                setLoadingReviewed(false);
+            }
+        }
+
+        fetchReviewedParks();
+    }, [showMyReviews]);
+
     // Get unique counties for filter dropdown
     const counties = useMemo(() => {
         const allCounties = parks.flatMap(park => park.counties);
         return ['all', ...Array.from(new Set(allCounties)).sort()];
     }, [parks]);
 
+    // Determine which parks to display
+    const displayParks = showMyReviews ? reviewedParks : parks;
+
     // Filter and sort parks
     const filteredAndSortedParks = useMemo(() => {
-        let filtered = parks;
+        let filtered = displayParks;
 
         // Filter by search term
         if (searchTerm.trim()) {
@@ -89,15 +122,16 @@ const StateParkList: React.FC = () => {
         });
 
         return sorted;
-    }, [parks, searchTerm, sortBy, selectedCounty]);
+    }, [displayParks, searchTerm, sortBy, selectedCounty]);
 
     const handleClearFilters = () => {
         setSearchTerm('');
         setSortBy('name-asc');
         setSelectedCounty('all');
+        setShowMyReviews(false);
     };
 
-    const showClearButton = searchTerm || selectedCounty !== 'all' || sortBy !== 'name-asc';
+    const showClearButton = searchTerm || selectedCounty !== 'all' || sortBy !== 'name-asc' || showMyReviews;
 
     if (loading) {
         return (
@@ -140,10 +174,28 @@ const StateParkList: React.FC = () => {
                 totalCount={parks.length}
                 onClearFilters={handleClearFilters}
                 showClearButton={showClearButton}
+                showMyReviews={showMyReviews}
+                setShowMyReviews={setShowMyReviews}
             />
 
+            {/* Loading State for My Reviews */}
+            {loadingReviewed && (
+                <div style={{
+                    padding: '40px',
+                    textAlign: 'center',
+                    backgroundColor: '#fff',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    marginBottom: '20px'
+                }}>
+                    <p style={{ fontSize: '16px', color: '#6c757d' }}>
+                        Loading your reviewed parks...
+                    </p>
+                </div>
+            )}
+
             {/* Parks Grid */}
-            {filteredAndSortedParks.length === 0 ? (
+            {!loadingReviewed && filteredAndSortedParks.length === 0 ? (
                 <div style={{
                     padding: '60px 20px',
                     textAlign: 'center',
@@ -156,14 +208,16 @@ const StateParkList: React.FC = () => {
                         color: '#2c3e50',
                         marginBottom: '12px'
                     }}>
-                        No parks found
+                        {showMyReviews ? "You haven't reviewed any parks yet" : "No parks found"}
                     </h3>
                     <p style={{ 
                         fontSize: '16px', 
                         color: '#6c757d',
                         marginBottom: '24px'
                     }}>
-                        Try adjusting your search or filters
+                        {showMyReviews 
+                            ? "Start exploring and leave your first review!" 
+                            : "Try adjusting your search or filters"}
                     </p>
                     <button
                         onClick={handleClearFilters}
@@ -181,7 +235,7 @@ const StateParkList: React.FC = () => {
                         onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#229954'}
                         onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#27ae60'}
                     >
-                        Clear All Filters
+                        {showMyReviews ? "View All Parks" : "Clear All Filters"}
                     </button>
                 </div>
             ) : (
