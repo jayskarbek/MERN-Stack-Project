@@ -29,6 +29,13 @@ module.exports = function (db) {
                 });
             }
 
+            // Email not verified
+            if (!user.Verified) {
+                return res.status(403).json({
+                    error: 'Please verify your email before logging in.'
+                });
+            }
+
             // Check against hashed password
             const passwordMatch = await bcrypt.compare(password, user.Password);
 

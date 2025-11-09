@@ -49,12 +49,11 @@ module.exports = function (db) {
                 }
             });
             
-            const verifyLink = `http://localhost:5101/verify/${verificationToken}`;
+            const verifyLink = `http://localhost:5000/verify/${verificationToken}`;
             await transporter.sendMail({
                 to: email,
                 subject: 'Verify Your Email',
-                html: `<p>Thank you for signing up! Please <a href="${verifyLink}">click here</a> to verify your account.</p>
-                    <p>This link will expire in 24 hours.</p>`
+                html: `<p>Thank you for signing up! Please <a href="${verifyLink}">click here</a> to verify your account.</p>`
             })
 
             // Register successful
