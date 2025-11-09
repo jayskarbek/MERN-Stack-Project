@@ -3,20 +3,24 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import ReviewsList from './ReviewsList';
 import ReviewForm from './ReviewForm';
+import type { RatingSet, Review } from '../types/Review';
 
-interface RatingSet {
-    views: number;
-    location: number;
-    amenities: number;
-}
 
-interface Review {
-    _id: string;
-    ratings: RatingSet;
-    comment: string;
-    userId: string;
-    createdAt: string;
-}
+// interface RatingSet {
+//     views: number;
+//     location: number;
+//     amenities: number;
+// }
+
+// interface Review {
+//     _id: string;
+//     ratings: RatingSet;
+//     comment: string;
+//     userId: string;
+//     userName?: string;
+//     createdAt: string;
+// }
+
 
 interface Park {
     _id: string;

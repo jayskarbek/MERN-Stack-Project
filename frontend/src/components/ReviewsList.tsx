@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { auth } from '../utils/auth';
+import type { Review } from '../types/Review';
 
 interface RatingSet {
     views: number;
@@ -9,14 +10,14 @@ interface RatingSet {
     overall: number;
 }
 
-interface Review {
-    _id: string;
-    ratings: RatingSet;
-    comment: string;
-    userId: string;
-    userName?: string;
-    createdAt: string;
-}
+// interface Review {
+//     _id: string;
+//     ratings: RatingSet;
+//     comment: string;
+//     userId: string;
+//     userName?: string;
+//     createdAt: string;
+// }
 
 interface ReviewsListProps {
     reviews: Review[];

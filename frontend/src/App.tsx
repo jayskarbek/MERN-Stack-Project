@@ -1,16 +1,16 @@
 import { Route, Navigate, Routes } from 'react-router-dom';
 import './App.css';
-import LoginPage from './pages/LoginPage.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import CardPage from './pages/CardPage.tsx';
-import ParkDetailsPage from './pages/ParkDetailsPage.tsx';
+import ParkDetailsPage from './pages/ParkDetailsPage';
 import { auth } from './utils/auth';
-import ForgotPassPage from './pages/ForgotPassPage.tsx';
-import ResetPassPage from './pages/ResetPassPage.tsx';
-import VerifyEmail from './components/VerifyEmail.tsx';
+import VerifyEmail from './components/VerifyEmail';
+import ForgotPassPage from './pages/ForgotPassPage';
+import ResetPassPage from './pages/ResetPassPage';
 
 // Protected Route Component
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     if (!auth.isAuthenticated()) {
         return <Navigate to="/" replace />;
     }
