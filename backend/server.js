@@ -32,13 +32,6 @@ async function connectDB() {
 connectDB();
 const db = client.db('COP4331Cards');
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
-    next();
-});
-
 // Define routes
 const pingRoute = require('./routes/ping')(db);
 app.use('/api', pingRoute);
