@@ -25,10 +25,29 @@ const VerifyEmail: React.FC = () => {
         alignItems: 'center',
     };
 
+    const box: React.CSSProperties = {
+        padding: '15px',
+        width: '30%',
+        height: '15%',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: '20px', 
+    };
+
   return (
     <div style={backgroundStyle}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Account Verified!</h1>
-        <p style={{ fontSize: '1.25rem' }}>Redirecting to login...</p>
+        <div style={box}>
+        <h1 
+            style={{ 
+                fontSize: '2.25rem', 
+                marginBottom: '1rem' 
+                }}>
+            Account Verified!</h1>
+
+        <p 
+            style={{ 
+                fontSize: '1.25rem' 
+                }}>
+            Redirecting to login...</p>
         
         <div
             style={{
@@ -42,6 +61,7 @@ const VerifyEmail: React.FC = () => {
             }}
         >
             Photo from Getty Images
+            </div>
         </div>
     </div>
     );
