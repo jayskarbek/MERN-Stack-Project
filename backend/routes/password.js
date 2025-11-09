@@ -35,14 +35,14 @@ module.exports = function (db) {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'user@gmail.com',
-                    pass: 'a password'
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS
                 }
             });
 
             const resetLink = `http://localhost:5101/resetpass?token=${token}&email=${email}`;
             await transporter.sendMail({
-                to: email,
+                to: user.Email,
                 subject: 'Password Reset',
                 html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>
                     <p>This link will expire in 15 minutes.</p>`
@@ -73,7 +73,7 @@ module.exports = function (db) {
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-            // Update password and clear token fields
+            // update password and clear token fields
             await users.updateOne(
             { Email: email },
                 { 
