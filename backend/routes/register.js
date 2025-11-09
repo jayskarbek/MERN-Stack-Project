@@ -1,7 +1,7 @@
 const express = require('express');
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-
-/* TODO: Add email when database is updated*/
+const nodemailer = require('nodemailer');
 
 module.exports = function (db) {
     const router = express.Router();
@@ -28,17 +28,39 @@ module.exports = function (db) {
             // Hash password
             const hashedPassword = await bcrypt.hash(password, 10);
 
+            // Create verification token
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+
             // Insert into database
             const result = await users.insertOne({
                 Password: hashedPassword,
                 FirstName: firstName,
                 LastName: lastName,
-                Email: email
+                Email: email,
+                VerificationToken: verificationToken,
+                Verified: false
             });
+
+             const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS
+                }
+            });
+            
+            const verifyLink = `http://localhost:5101/verify/${verificationToken}`;
+            await transporter.sendMail({
+                to: email,
+                subject: 'Verify Your Email',
+                html: `<p>Thank you for signing up! Please <a href="${verifyLink}">click here</a> to verify your account.</p>
+                    <p>This link will expire in 24 hours.</p>`
+            })
 
             // Register successful
             res.status(201).json({
                 userId: result.insertedId,
+                message: 'Registration successful. Check your email to verify your account.',
                 error: ''
             });
         } catch (err) {
