@@ -46,3 +46,10 @@ Desktop.ini
 # TypeScript
 *.d.ts
 
+# Test coverage
+coverage/
+.nyc_output/
+
+# Jest
+*.snap
+.jest-cache/

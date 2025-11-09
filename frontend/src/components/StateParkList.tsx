@@ -168,12 +168,12 @@ const StateParkList: React.FC = () => {
                 selectedCounty={selectedCounty}
                 setSelectedCounty={setSelectedCounty}
                 sortBy={sortBy}
-                setSortBy={setSortBy}
+                setSortBy={(value: string) => setSortBy(value as SortOption)}
                 counties={counties}
                 resultsCount={filteredAndSortedParks.length}
                 totalCount={parks.length}
                 onClearFilters={handleClearFilters}
-                showClearButton={showClearButton}
+                showClearButton={Boolean(showClearButton)}
                 showMyReviews={showMyReviews}
                 setShowMyReviews={setShowMyReviews}
             />

@@ -1,4 +1,4 @@
-import ResetPassword from '../components/ResetPassword.tsx';
+import ResetPassword from '../components/ResetPassword';
 
 const ResetPassPage = () => {
     return (

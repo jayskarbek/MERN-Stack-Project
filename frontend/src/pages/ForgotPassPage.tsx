@@ -1,4 +1,4 @@
-import ForgotPassword from '../components/ForgotPassword.tsx';
+import ForgotPassword from '../components/ForgotPassword';
 
 const ForgotPassPage = () => {
     return (
