@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 module.exports = function (db) {
     const router = express.Router();
     const users = db.collection('Users');
+    const backendURL = process.env.BACKEND_URL || 'http://134.199.193.243:5000';
 
     router.post('/register', async (req, res) => {
         try {
@@ -49,7 +50,7 @@ module.exports = function (db) {
                 }
             });
             
-            const verifyLink = `http://localhost:5000/verify/${verificationToken}`;
+            const verifyLink = `${backendURL}/verify/${verificationToken}`;
             await transporter.sendMail({
                 to: email,
                 subject: 'Verify Your Email',
