@@ -8,9 +8,10 @@ const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const backendURL = import.meta.env.VITE_BACKEND_URL || 'http://134.199.193.253:5000'
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `${backendURL}/${route}`;
     }
 
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {

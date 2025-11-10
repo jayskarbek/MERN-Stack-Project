@@ -12,6 +12,7 @@ const ResetPassword: React.FC = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const backendURL = import.meta.env.VITE_BACKEND_URL || 'http://134.199.193.253:5000'
 
     const email = searchParams.get('email');
     const token = searchParams.get('token');
@@ -23,7 +24,7 @@ const ResetPassword: React.FC = () => {
     }, [email, token]);
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `${backendURL}/${route}`;
     }
     async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();

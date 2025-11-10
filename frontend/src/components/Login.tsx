@@ -10,9 +10,10 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const backendURL = import.meta.env.VITE_BACKEND_URL || 'http://134.199.193.253:5000'
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `${backendURL}/${route}`;
     }
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
