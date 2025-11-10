@@ -12,8 +12,14 @@ const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     function buildPath(route: string) {
-        return `API_URL + '/api/${route}`;
+        // Use absolute URL for production
+        const baseURL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000/api'
+            : `${window.location.protocol}//${window.location.hostname}/api`;
+        
+        return `${baseURL}/${route}`;
     }
+    
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
@@ -26,7 +32,7 @@ const Login: React.FC = () => {
         setError('');
 
         try { 
-            const response = await fetch(buildPath('api/login'), {
+                const response = await fetch(buildPath('login'), {  // Remove the duplicate 'api/'
                 method: 'POST',
                 body: JSON.stringify({ email, password }),
                 headers: { 'Content-Type': 'application/json' },

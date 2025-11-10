@@ -23,7 +23,7 @@ const ResetPassword: React.FC = () => {
     }, [email, token]);
 
     function buildPath(route: string) {
-        return `API_URL + '/api/${route}`;
+        return `/api/${route}`;
     }
     async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -42,7 +42,7 @@ const ResetPassword: React.FC = () => {
         setError('');
 
         try { 
-            const response = await fetch(buildPath('api/resetpass'), {
+            const response = await fetch(buildPath('resetpass'), {
                 method: 'POST',
                 body: JSON.stringify({ email, token, newPassword: password }),
                 headers: { 'Content-Type': 'application/json' },

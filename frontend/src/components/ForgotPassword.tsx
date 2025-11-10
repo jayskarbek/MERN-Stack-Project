@@ -10,7 +10,7 @@ const ForgotPassword: React.FC = () => {
     const [success, setSuccess] = useState('');
 
     function buildPath(route: string) {
-        return `API_URL + '/api/${route}`;
+        return `/api/${route}`;
     }
 
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -22,7 +22,7 @@ const ForgotPassword: React.FC = () => {
         }
 
         try {
-            const response = await fetch(buildPath('api/forgotpass'), {
+            const response = await fetch(buildPath('forgotpass'), {
                 method: 'POST',
                 body: JSON.stringify({ email }),
                 headers: { 'Content-Type': 'application/json' },

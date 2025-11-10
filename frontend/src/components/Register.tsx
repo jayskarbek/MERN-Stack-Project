@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     const [success, setSuccess] = useState('');
 
     function buildPath(route: string) {
-        return `API_URL + '/api/${route}`;
+        return `/api/${route}`;
     }
 
     async function doRegister(event: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -32,7 +32,7 @@ const Register: React.FC = () => {
         }
 
         try {
-            const response = await fetch(buildPath('api/register'), {
+            const response = await fetch(buildPath('register'), {
                 method: 'POST',
                 body: JSON.stringify({ email, password, firstName, lastName }),
                 headers: { 'Content-Type': 'application/json' },

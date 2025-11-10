@@ -45,11 +45,11 @@ module.exports = function (db) {
                 service: 'gmail',
                 auth: {
                     user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS
+                    pass: process.env.EMAIL_PASSWORD
                 }
             });
             
-            const verifyLink = `http://localhost:5000/verify/${verificationToken}`;
+            const verifyLink = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
             await transporter.sendMail({
                 to: email,
                 subject: 'Verify Your Email',
@@ -66,6 +66,36 @@ module.exports = function (db) {
             console.error(err);
             res.status(500).json({ error: 'Internal server error' });
         }
+
+        router.get('/verify/:token', async (req, res) => {
+            try {
+                const { token } = req.params;
+    
+                const user = await users.findOne({ VerificationToken: token });
+    
+                if (!user) {
+                    return res.status(400).json({ error: 'Invalid or expired verification token' });
+                }
+    
+                if (user.Verified) {
+                    return res.status(400).json({ error: 'Email already verified' });
+                }
+    
+                // Update user as verified
+                await users.updateOne(
+                    { VerificationToken: token },
+                    { 
+                        $set: { Verified: true },
+                        $unset: { VerificationToken: "" }
+                    }
+                );
+    
+                res.json({ message: 'Email verified successfully! You can now log in.' });
+            } catch (err) {
+                console.error('Verification error:', err);
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        });
     });
 
     return router;
