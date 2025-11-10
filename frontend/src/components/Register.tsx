@@ -47,7 +47,7 @@ const Register: React.FC = () => {
             }
 
             setError('');
-            setSuccess('Registration Successful! Please check your emai lto verify your account! ');
+            setSuccess('Registration Successful! Please check your email to verify your account! ');
             console.log('Registered user:', res.user);
 
 

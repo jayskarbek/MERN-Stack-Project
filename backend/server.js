@@ -49,7 +49,7 @@ const passwordRoute = require('./routes/password')(db);
 app.use('/api', passwordRoute);
 
 const verifyRoute = require('./routes/verify')(db);
-app.use('/api', verifyRoute);
+app.use('/verify', verifyRoute);
 
 
 // Starts the server
