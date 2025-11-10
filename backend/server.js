@@ -48,6 +48,10 @@ app.use('/api', parksRoute);
 const passwordRoute = require('./routes/password')(db);
 app.use('/api', passwordRoute);
 
+const verifyRoute = require('./routes/verify')(db);
+app.use('/api', verifyRoute);
+
+
 // Starts the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
