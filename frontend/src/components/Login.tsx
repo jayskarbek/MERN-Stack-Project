@@ -12,7 +12,7 @@ const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `API_URL + '/api/${route}`;
     }
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();

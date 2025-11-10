@@ -40,7 +40,7 @@ module.exports = function (db) {
                 }
             });
 
-            const resetLink = `http://localhost:5101/resetpass?token=${token}&email=${email}`;
+            const resetLink = `${process.env.FRONTEND_URL}/resetpass?token=${token}&email=${encodeURIComponent(email)}`;
             await transporter.sendMail({
                 to: user.Email,
                 subject: 'Password Reset',

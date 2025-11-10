@@ -23,7 +23,7 @@ module.exports = function (db) {
             );
 
             // Go to verify confirmation page
-            return res.redirect('http://localhost:5101/verifyemail');
+            return res.redirect(`${process.env.FRONTEND_URL}/verifyemail`);
         } catch (err) {
             console.error('Verification error:', err);
             return res.status(500).send('Internal server error.');

@@ -10,7 +10,7 @@ const ForgotPassword: React.FC = () => {
     const [success, setSuccess] = useState('');
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `API_URL + '/api/${route}`;
     }
 
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {

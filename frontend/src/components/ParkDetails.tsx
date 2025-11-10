@@ -42,10 +42,10 @@ const ParkDetails: React.FC = () => {
 
     const fetchParkDetails = async () => {
         try {
-            const parkResponse = await axios.get(`http://localhost:5000/api/parks/${id}`);
+            const parkResponse = await axios.get(`API_URL + '/parks/${id}`);
             setPark(parkResponse.data);
 
-            const reviewsResponse = await axios.get(`http://localhost:5000/api/parks/${id}/reviews`);
+            const reviewsResponse = await axios.get(`API_URL + '/parks/${id}/reviews`);
             setReviews(reviewsResponse.data);
         } catch (err) {
             console.error('Error fetching park details:', err);

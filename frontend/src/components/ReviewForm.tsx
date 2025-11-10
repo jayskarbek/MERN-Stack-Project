@@ -66,7 +66,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ parkId, onReviewSubmitted }) =>
             const token = auth.getToken();
             
             await axios.post(
-                `http://localhost:5000/api/parks/${parkId}/reviews`,
+                `API_URL + '/parks/${parkId}/reviews`,
                 {
                     comment: comment.trim(),
                     ratings: {

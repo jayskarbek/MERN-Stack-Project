@@ -56,7 +56,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
             }
 
             await axios.patch(
-                `http://localhost:5000/api/parks/${parkId}/reviews/${reviewId}`,
+                `API_URL + '/parks/${parkId}/reviews/${reviewId}`,
                 {
                     comment: editComment,
                     ratings: editRatings
@@ -90,7 +90,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
             }
 
             await axios.delete(
-                `http://localhost:5000/api/parks/${parkId}/reviews/${reviewId}`,
+                `API_URL + '/parks/${parkId}/reviews/${reviewId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`

@@ -3,6 +3,7 @@ import axios from 'axios';
 import StateParkCard from './StateParkCard';
 import ParkSearchFilter from './ParkSearch';
 import { auth } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 
 interface Park {
     _id: string;
@@ -32,7 +33,7 @@ const StateParkList: React.FC = () => {
     useEffect(() => {
         async function fetchParks() {
             try {
-                const response = await axios.get('http://localhost:5000/api/parks');
+                const response = await axios.get(buildApiUrl('parks'));
                 setParks(response.data);
             } catch (err) {
                 console.error('Error fetching parks:', err);
@@ -54,7 +55,7 @@ const StateParkList: React.FC = () => {
             setLoadingReviewed(true);
             try {
                 const token = auth.getToken();
-                const response = await axios.get('http://localhost:5000/api/my-reviewed-parks', {
+                const response = await axios.get(buildApiUrl('my-reviewed-parks'), {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

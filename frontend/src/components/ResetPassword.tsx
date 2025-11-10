@@ -23,7 +23,7 @@ const ResetPassword: React.FC = () => {
     }, [email, token]);
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `API_URL + '/api/${route}`;
     }
     async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -130,6 +130,16 @@ const ResetPassword: React.FC = () => {
                         {error}
                     </div>
                 }
+	{success &&
+    		<div style={{
+        		fontSize: '15px',
+        		color: 'green',
+        		marginBottom: '10px',
+        		fontWeight: 'bold'
+    		}}>
+        		{success}
+    		</div>
+	}
                 <input
                     type="submit"
                     id="loginButton"

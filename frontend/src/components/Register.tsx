@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Register.css';
 
 const Register: React.FC = () => { 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     const [success, setSuccess] = useState('');
 
     function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
+        return `API_URL + '/api/${route}`;
     }
 
     async function doRegister(event: React.FormEvent<HTMLFormElement>): Promise<void> {
