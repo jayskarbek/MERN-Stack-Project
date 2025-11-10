@@ -10,7 +10,7 @@ const createTestUser = async (overrides = {}) => {
         LastName: 'Doe',
         Email: 'john.doe@example.com',
         Password: hashedPassword,
-        isVerified: true,
+        Verified: true,
         ...overrides
     };
 };
