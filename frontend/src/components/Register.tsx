@@ -50,6 +50,7 @@ const Register: React.FC = () => {
             setSuccess('Registration Successful! Please check your email to verify your account! ');
             console.log('Registered user:', res.user);
 
+            setTimeout(() => navigate('/login'), 3000);
 
         } catch (err) {
             console.error('Fetch error:', err);
