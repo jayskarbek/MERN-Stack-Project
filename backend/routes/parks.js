@@ -109,6 +109,40 @@ async function calculateParkRatings(parkId) {
         }
     });
 
+    // Get parks that the user has reviewed (Protected - Requires authentication)
+    router.get('/my-reviewed-parks', authenticateToken, async (req, res) => {
+        try {
+            const userId = req.user.userId;
+            
+            const userReviews = await reviewsCollection.find({ userId }).toArray();
+            
+            const parkIds = [...new Set(userReviews.map(review => review.parkId))];
+            
+            if (parkIds.length === 0) {
+                return res.status(200).json([]);
+            }
+            
+            const reviewedParks = await parksCollection.find({ 
+                _id: { $in: parkIds.map(id => new ObjectId(id)) }
+            }).toArray();
+            
+            const parksWithRatings = await Promise.all(
+                reviewedParks.map(async (park) => {
+                    const ratings = await calculateParkRatings(park._id);
+                    return {
+                        ...park,
+                        ...ratings
+                    };
+                })
+            );
+            
+            res.status(200).json(parksWithRatings);
+        } catch (err) {
+            console.error('Error fetching reviewed parks:', err);
+            res.status(500).json({ error: 'Failed to fetch reviewed parks' });
+        }
+    });
+
     // Add a new review for a park (Protected - Requires authentication)
     router.post('/parks/:id/reviews', authenticateToken, async (req, res) => {
         try {
@@ -231,4 +265,5 @@ async function calculateParkRatings(parkId) {
     });
 
     return router;
+
 };
