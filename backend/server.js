@@ -10,7 +10,7 @@ const url = process.env.MONGODB_URI || 'mongodb+srv://hugoputigna:SzyF0sJk6Z40f1
 const client = new MongoClient(url);
 
 const local = 'http://localhost:5100'
-const ipaddress = process.env.FRONTEND_URL || 'http://134.199.193.253:5100/'
+const ipaddress = process.env.FRONTEND_URL || 'http://134.199.193.253:5100'
 
 // App setup
 app.use(cors({
