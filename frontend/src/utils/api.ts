@@ -1,8 +1,5 @@
-// Get API URL - use HTTPS in production, HTTP in development
-const API_URL = import.meta.env.VITE_API_URL || 
-    (window.location.hostname === 'localhost' 
-        ? 'http://localhost:5000/api'
-        : 'https://floridastateparks.xyz/api');  // HTTPS for production
+// Get API URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Helper function to build API endpoints
 export const buildApiUrl = (endpoint: string): string => {
