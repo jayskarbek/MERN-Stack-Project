@@ -171,9 +171,35 @@ const Register: React.FC = () => {
                     display: 'block',
                     backgroundColor: 'darkgreen' }}
             />
+            <button
+                type="button"
+                onClick={() => navigate('/login')}
+                style={{
+                    fontSize: '18px',
+                    marginTop: '15px',
+                    padding: '8px 20px',
+                    backgroundColor: 'transparent',
+                    color: '#2c5f2d',
+                    border: '2px solid #2c5f2d',
+                    borderRadius: '25px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#2c5f2d';
+                    e.currentTarget.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#2c5f2d';
+                }}
+            >
+                Return to Login
+            </button>
+            
             <span id="registerResult"></span>
         </form>
-        
         <div
             style={{
             position: 'absolute',
