@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import StateParkCard from './StateParkCard';
 import ParkSearchFilter from './ParkSearch';
@@ -19,10 +19,11 @@ type SortOption = 'name-asc' | 'name-desc' | 'county-asc' | 'county-desc' | 'rat
 
 const StateParkList: React.FC = () => {
     const [parks, setParks] = useState<Park[]>([]);
-    const [reviewedParks, setReviewedParks] = useState<Park[]>([]);
+    const [allParks, setAllParks] = useState<Park[]>([]); // Keep all parks for county list
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingReviewed, setLoadingReviewed] = useState<boolean>(false);
+    const [isSearching, setIsSearching] = useState<boolean>(false); // Track if search is in progress
     
     // Search and filter states
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -30,22 +31,80 @@ const StateParkList: React.FC = () => {
     const [selectedCounty, setSelectedCounty] = useState<string>('all');
     const [showMyReviews, setShowMyReviews] = useState<boolean>(false);
 
+    // Initial load - get all parks for county list
     useEffect(() => {
-        async function fetchParks() {
+        async function fetchAllParks() {
             try {
                 const response = await axios.get(buildApiUrl('parks'));
+                setAllParks(response.data);
                 setParks(response.data);
+                setLoading(false);
             } catch (err) {
                 console.error('Error fetching parks:', err);
                 setError('Failed to load parks. Please try again later.');
-            } finally {
                 setLoading(false);
             }
         }
 
-        fetchParks();
+        fetchAllParks();
     }, []);
 
+    // Server-side search when filters change - INSTANT with request cancellation
+    useEffect(() => {
+        // Don't search if showing reviewed parks
+        if (showMyReviews) return;
+
+        // Create abort controller to cancel previous requests
+        const abortController = new AbortController();
+
+        async function searchParks() {
+            try {
+                setIsSearching(true);
+                
+                // Build query parameters
+                const params: any = {
+                    sort: sortBy
+                };
+
+                if (searchTerm.trim() !== '') {
+                    params.query = searchTerm.trim();
+                }
+
+                if (selectedCounty !== 'all') {
+                    params.county = selectedCounty;
+                }
+
+                // Call the server-side search endpoint with abort signal
+                const response = await axios.get(buildApiUrl('parks/search'), { 
+                    params,
+                    signal: abortController.signal
+                });
+                
+                console.log('server returned', response.data.length, 'parks');
+                setParks(response.data);
+                setLoading(false);
+                setIsSearching(false);
+            } catch (err: any) {
+                // Don't show error if request was cancelled
+                if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') {
+                    return;
+                }
+                console.error('Error searching parks:', err);
+                setError('Failed to search parks. Please try again.');
+                setLoading(false);
+                setIsSearching(false);
+            }
+        }
+
+        searchParks();
+
+        // Cleanup: cancel the request if component unmounts or search changes
+        return () => {
+            abortController.abort();
+        };
+    }, [searchTerm, sortBy, selectedCounty, showMyReviews]);
+
+    // Fetch reviewed parks when toggled
     useEffect(() => {
         async function fetchReviewedParks() {
             if (!showMyReviews || !auth.isAuthenticated()) {
@@ -60,7 +119,8 @@ const StateParkList: React.FC = () => {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                setReviewedParks(response.data);
+                console.log('Found', response.data.length, 'reviewed parks');
+                setParks(response.data);
             } catch (err) {
                 console.error('Error fetching reviewed parks:', err);
                 setError('Failed to load your reviewed parks.');
@@ -73,57 +133,7 @@ const StateParkList: React.FC = () => {
     }, [showMyReviews]);
 
     // Get unique counties for filter dropdown
-    const counties = useMemo(() => {
-        const allCounties = parks.flatMap(park => park.counties);
-        return ['all', ...Array.from(new Set(allCounties)).sort()];
-    }, [parks]);
-
-    // Determine which parks to display
-    const displayParks = showMyReviews ? reviewedParks : parks;
-
-    // Filter and sort parks
-    const filteredAndSortedParks = useMemo(() => {
-        let filtered = displayParks;
-
-        // Filter by search term
-        if (searchTerm.trim()) {
-            filtered = filtered.filter(park =>
-                park.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                park.counties.some(county => 
-                    county.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-            );
-        }
-
-        // Filter by county
-        if (selectedCounty !== 'all') {
-            filtered = filtered.filter(park =>
-                park.counties.includes(selectedCounty)
-            );
-        }
-
-        // Sort parks
-        const sorted = [...filtered].sort((a, b) => {
-            switch (sortBy) {
-                case 'name-asc':
-                    return a.name.localeCompare(b.name);
-                case 'name-desc':
-                    return b.name.localeCompare(a.name);
-                case 'county-asc':
-                    return a.counties[0].localeCompare(b.counties[0]);
-                case 'county-desc':
-                    return b.counties[0].localeCompare(a.counties[0]);
-                case 'rating-desc':
-                    return (b.averageRating || 0) - (a.averageRating || 0);
-                case 'rating-asc':
-                    return (a.averageRating || 0) - (b.averageRating || 0);
-                default:
-                    return 0;
-            }
-        });
-
-        return sorted;
-    }, [displayParks, searchTerm, sortBy, selectedCounty]);
+    const counties = ['all', ...Array.from(new Set(allParks.flatMap(park => park.counties))).sort()];
 
     const handleClearFilters = () => {
         setSearchTerm('');
@@ -134,7 +144,7 @@ const StateParkList: React.FC = () => {
 
     const showClearButton = searchTerm || selectedCounty !== 'all' || sortBy !== 'name-asc' || showMyReviews;
 
-    if (loading) {
+    if (loading && !loadingReviewed) {
         return (
             <div style={{ 
                 paddingTop: '100px', 
@@ -171,12 +181,13 @@ const StateParkList: React.FC = () => {
                 sortBy={sortBy}
                 setSortBy={(value: string) => setSortBy(value as SortOption)}
                 counties={counties}
-                resultsCount={filteredAndSortedParks.length}
-                totalCount={parks.length}
+                resultsCount={parks.length}
+                totalCount={allParks.length}
                 onClearFilters={handleClearFilters}
                 showClearButton={Boolean(showClearButton)}
                 showMyReviews={showMyReviews}
                 setShowMyReviews={setShowMyReviews}
+                isSearching={isSearching}
             />
 
             {/* Loading State for My Reviews */}
@@ -196,7 +207,7 @@ const StateParkList: React.FC = () => {
             )}
 
             {/* Parks Grid */}
-            {!loadingReviewed && filteredAndSortedParks.length === 0 ? (
+            {!loadingReviewed && parks.length === 0 ? (
                 <div style={{
                     padding: '60px 20px',
                     textAlign: 'center',
@@ -246,7 +257,7 @@ const StateParkList: React.FC = () => {
                     gap: '24px',
                     padding: '0 0 40px 0'
                 }}>
-                    {filteredAndSortedParks.map((park) => (
+                    {parks.map((park) => (
                         <StateParkCard
                             key={park._id}
                             id={park._id}

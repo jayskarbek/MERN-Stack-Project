@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { auth } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 
 interface ReviewFormProps {
     parkId: string;
@@ -43,7 +44,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ parkId, onReviewSubmitted }) =>
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        // Check if user is authenticated
         if (!auth.isAuthenticated()) {
             setError('Please log in to submit a review.');
             return;
@@ -66,7 +66,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ parkId, onReviewSubmitted }) =>
             const token = auth.getToken();
             
             await axios.post(
-                `API_URL + '/parks/${parkId}/reviews`,
+                buildApiUrl(`parks/${parkId}/reviews`),
                 {
                     comment: comment.trim(),
                     ratings: {
@@ -74,7 +74,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ parkId, onReviewSubmitted }) =>
                         location: ratings.location,
                         amenities: ratings.amenities
                     }
-                    // Note: userId is now taken from JWT token on backend, no need to send it
                 },
                 {
                     headers: {
@@ -96,9 +95,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ parkId, onReviewSubmitted }) =>
             console.error('Error submitting review:', err);
             if (err.response?.status === 401) {
                 setError('Your session has expired. Please log in again.');
-                // Optionally redirect to login
-                // auth.logout();
-                // window.location.href = '/';
             } else {
                 setError(err.response?.data?.error || 'Failed to submit review. Please try again.');
             }

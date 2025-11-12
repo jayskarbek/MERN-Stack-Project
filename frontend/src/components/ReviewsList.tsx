@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { auth } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 import type { Review } from '../types/Review';
 
 interface RatingSet {
@@ -10,18 +11,9 @@ interface RatingSet {
     overall: number;
 }
 
-// interface Review {
-//     _id: string;
-//     ratings: RatingSet;
-//     comment: string;
-//     userId: string;
-//     userName?: string;
-//     createdAt: string;
-// }
-
 interface ReviewsListProps {
     reviews: Review[];
-    onReviewUpdated: () => void; // Callback to refresh reviews after edit/delete
+    onReviewUpdated: () => void;
     parkId: string;
 }
 
@@ -56,7 +48,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
             }
 
             await axios.patch(
-                `API_URL + '/parks/${parkId}/reviews/${reviewId}`,
+                buildApiUrl(`parks/${parkId}/reviews/${reviewId}`),
                 {
                     comment: editComment,
                     ratings: editRatings
@@ -70,7 +62,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
             );
 
             setEditingReviewId(null);
-            onReviewUpdated(); // Refresh the reviews
+            onReviewUpdated();
         } catch (error) {
             console.error('Error updating review:', error);
             alert('Failed to update review. Please try again.');
@@ -90,7 +82,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
             }
 
             await axios.delete(
-                `API_URL + '/parks/${parkId}/reviews/${reviewId}`,
+                buildApiUrl(`parks/${parkId}/reviews/${reviewId}`),
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -98,7 +90,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
                 }
             );
 
-            onReviewUpdated(); // Refresh the reviews
+            onReviewUpdated();
         } catch (error) {
             console.error('Error deleting review:', error);
             alert('Failed to delete review. Please try again.');

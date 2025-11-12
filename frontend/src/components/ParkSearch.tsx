@@ -15,6 +15,7 @@ interface ParkSearchFilterProps {
     showClearButton: boolean;
     showMyReviews: boolean;
     setShowMyReviews: (value: boolean) => void;
+    isSearching?: boolean; // Optional: shows "Searching..." indicator
 }
 
 const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
@@ -30,7 +31,8 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
     onClearFilters,
     showClearButton,
     showMyReviews,
-    setShowMyReviews
+    setShowMyReviews,
+    isSearching = false
 }) => {
     const isAuthenticated = auth.isAuthenticated();
 
@@ -68,7 +70,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                         color: '#2c3e50',
                         marginBottom: '8px'
                     }}>
-                        Search Parks
+                        Search Parks {isSearching && <span style={{ color: '#3498db', fontSize: '12px' }}>(searching...)</span>}
                     </label>
                     <div style={{ position: 'relative' }}>
                         <input
@@ -267,7 +269,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     {searchTerm && ` for "${searchTerm}"`}
                     {showMyReviews && ' (your reviews)'}
                 </span>
-                {totalCount > 0 && (
+                {totalCount > 0 && !showMyReviews && (
                     <span style={{ fontSize: '13px' }}>
                         Total: {totalCount} parks
                     </span>
