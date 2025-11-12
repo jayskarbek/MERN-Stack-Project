@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { buildApiUrl } from '../utils/api';
-import './ForgotPassword.css';
 
 const ForgotPassword: React.FC = () => {
     const navigate = useNavigate();
@@ -14,9 +13,9 @@ const ForgotPassword: React.FC = () => {
 
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
-        
+
         if (!email) {
-            setError("Please enter your email");
+            setError('Please enter your email');
             return;
         }
 
@@ -34,7 +33,7 @@ const ForgotPassword: React.FC = () => {
             const res = await response.json();
 
             if (!response.ok) {
-                setError(res.error);
+                setError(res.error || 'Failed to send reset link.');
                 setIsLoading(false);
                 return;
             }
@@ -60,6 +59,7 @@ const ForgotPassword: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '20px',
+        position: 'relative',
     };
 
     const formContainerStyle: React.CSSProperties = {
@@ -69,41 +69,74 @@ const ForgotPassword: React.FC = () => {
         maxWidth: '420px',
         width: '100%',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        textAlign: 'center',
     };
 
     const inputStyle: React.CSSProperties = {
-        fontSize: '16px',
-        padding: '12px 20px',
+        fontSize: '20px',
         width: '100%',
-        borderRadius: '12px',
-        border: '2px solid #e0e0e0',
+        borderRadius: '14px',
         backgroundColor: '#fff',
-        transition: 'border-color 0.3s',
+        color: '#000',
+        border: '2px solid #e0e0e0',
+        textAlign: 'center',
+        padding: '12px 16px',
         marginBottom: '16px',
+        transition: 'border-color 0.3s',
         outline: 'none',
+    };
+
+    const buttonStyle: React.CSSProperties = {
+        fontSize: '18px',
+        fontWeight: 600,
+        borderRadius: '14px',
+        width: '100%',
+        padding: '14px',
+        border: 'none',
+        backgroundColor: '#2c5f2d',
+        color: 'white',
+        cursor: isLoading ? 'not-allowed' : 'pointer',
+        transition: 'all 0.3s',
+        opacity: isLoading ? 0.7 : 1,
+        marginBottom: '12px',
+    };
+
+    const outlineButtonStyle: React.CSSProperties = {
+        fontSize: '16px',
+        fontWeight: 500,
+        padding: '12px',
+        width: '100%',
+        backgroundColor: 'transparent',
+        color: '#2c5f2d',
+        border: '2px solid #2c5f2d',
+        borderRadius: '14px',
+        cursor: 'pointer',
+        transition: 'all 0.3s',
     };
 
     return (
         <div style={backgroundStyle}>
             <div style={formContainerStyle}>
-                <h2 style={{
-                    fontSize: '32px',
-                    fontWeight: 'bold',
-                    color: '#2c5f2d',
-                    marginBottom: '12px',
-                    textAlign: 'center',
-                    marginTop: '0'
-                }}>
+                <h2
+                    style={{
+                        fontSize: '30px',
+                        fontWeight: 'bold',
+                        color: '#2c5f2d',
+                        marginBottom: '20px',
+                    }}
+                >
                     Reset Password
                 </h2>
-                
-                <p style={{
-                    fontSize: '14px',
-                    color: '#666',
-                    textAlign: 'center',
-                    marginBottom: '30px'
-                }}>
-                    Enter your email and we'll send you a link to reset your password
+
+                <p
+                    style={{
+                        fontSize: '15px',
+                        color: '#555',
+                        textAlign: 'center',
+                        marginBottom: '30px',
+                    }}
+                >
+                    Enter your email and we’ll send you a link to reset your password
                 </p>
 
                 <form onSubmit={doForgotPass}>
@@ -112,78 +145,60 @@ const ForgotPassword: React.FC = () => {
                         placeholder="Email address"
                         style={inputStyle}
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        onFocus={(e) => e.target.style.borderColor = '#2c5f2d'}
-                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={(e) => (e.target.style.borderColor = '#2c5f2d')}
+                        onBlur={(e) => (e.target.style.borderColor = '#e0e0e0')}
                         disabled={isLoading}
                     />
 
-                    {error && 
-                        <div style={{ 
-                            fontSize: '14px', 
-                            color: '#dc3545',
-                            marginBottom: '16px',
-                            padding: '10px',
-                            backgroundColor: '#ffe6e6',
-                            borderRadius: '8px',
-                            textAlign: 'center'
-                        }}>
+                    {error && (
+                        <div
+                            style={{
+                                fontSize: '14px',
+                                color: '#dc3545',
+                                marginBottom: '16px',
+                                padding: '10px',
+                                backgroundColor: '#ffe6e6',
+                                borderRadius: '8px',
+                            }}
+                        >
                             {error}
                         </div>
-                    }
+                    )}
 
-                    {success && 
-                        <div style={{
-                            fontSize: '14px',  
-                            color: '#28a745',
-                            marginBottom: '16px',
-                            padding: '10px',
-                            backgroundColor: '#e6ffe6',
-                            borderRadius: '8px',
-                            textAlign: 'center'
-                        }}>
+                    {success && (
+                        <div
+                            style={{
+                                fontSize: '14px',
+                                color: '#28a745',
+                                marginBottom: '16px',
+                                padding: '10px',
+                                backgroundColor: '#e6ffe6',
+                                borderRadius: '8px',
+                            }}
+                        >
                             {success}
                         </div>
-                    }
+                    )}
 
                     <button
                         type="submit"
-                        style={{ 
-                            fontSize: '18px',
-                            fontWeight: '600',
-                            borderRadius: '12px',
-                            width: '100%',
-                            padding: '14px',
-                            border: 'none',
-                            backgroundColor: '#2c5f2d',
-                            color: 'white',
-                            cursor: isLoading ? 'not-allowed' : 'pointer',
-                            transition: 'all 0.3s',
-                            marginBottom: '12px',
-                            opacity: isLoading ? 0.7 : 1
-                        }}
+                        style={buttonStyle}
+                        onMouseEnter={(e) =>
+                            !isLoading && (e.currentTarget.style.backgroundColor = '#234d23')
+                        }
+                        onMouseLeave={(e) =>
+                            !isLoading && (e.currentTarget.style.backgroundColor = '#2c5f2d')
+                        }
                         disabled={isLoading}
-                        onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#234d23')}
-                        onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#2c5f2d')}
                     >
                         {isLoading ? 'Sending...' : 'Send Reset Link'}
                     </button>
 
                     <button
                         type="button"
+                        style={outlineButtonStyle}
                         onClick={() => navigate('/login')}
-                        style={{
-                            fontSize: '16px',
-                            fontWeight: '500',
-                            padding: '12px',
-                            width: '100%',
-                            backgroundColor: 'transparent',
-                            color: '#2c5f2d',
-                            border: '2px solid #2c5f2d',
-                            borderRadius: '12px',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s'
-                        }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor = '#2c5f2d';
                             e.currentTarget.style.color = 'white';
@@ -197,7 +212,7 @@ const ForgotPassword: React.FC = () => {
                     </button>
                 </form>
             </div>
-            
+
             <div
                 style={{
                     position: 'absolute',
