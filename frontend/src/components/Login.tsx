@@ -90,6 +90,7 @@ const Login: React.FC = () => {
         transition: 'border-color 0.3s',
         marginBottom: '16px',
         outline: 'none',
+        color: '#000',
     };
 
     return (
