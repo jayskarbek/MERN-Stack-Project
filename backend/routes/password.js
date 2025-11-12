@@ -1,11 +1,14 @@
 const express = require('express');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 module.exports = function (db) {
     const router = express.Router();
     const users = db.collection('Users');
+    
+    // Set SendGrid API key
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     router.post('/forgotpass', async (req, res) => {
         try {
@@ -32,25 +35,22 @@ module.exports = function (db) {
                 }
             )
 
-            const transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true, // use SSL
-                auth: {
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASSWORD
-                }
-            });
-
             const resetLink = `${process.env.FRONTEND_URL}/resetpass?token=${token}&email=${encodeURIComponent(email)}`;
-            await transporter.sendMail({
+            
+            const msg = {
                 to: user.Email,
+                from: {
+                    email: process.env.EMAIL_USER,
+                    name: 'Park Reviews'
+                },
                 subject: 'Password Reset',
                 html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>
-                    <p>This link will expire in 15 minutes.</p>`
-            })
+                       <p>This link will expire in 15 minutes.</p>`
+            };
 
-            res.json({ message: 'Reset password link set to email.' });
+            await sgMail.send(msg);
+
+            res.json({ message: 'Reset password link sent to email.' });
         } catch (err) {
             console.error('Forgot Password Error:', err);
             res.status(500).json({

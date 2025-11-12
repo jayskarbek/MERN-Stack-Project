@@ -1,11 +1,14 @@
 const express = require('express');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 module.exports = function (db) {
     const router = express.Router();
     const users = db.collection('Users');
+    
+    // Set SendGrid API key
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     router.post('/register', async (req, res) => {
         try {
@@ -41,22 +44,19 @@ module.exports = function (db) {
                 Verified: false
             });
 
-            const transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true, // use SSL
-                auth: {
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASSWORD
-                }
-            });
+            const verifyLink = `https://floridastateparks.xyz/api/verify/${verificationToken}`;
             
-            const verifyLink = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
-            await transporter.sendMail({
+            const msg = {
                 to: email,
+                from: {
+                    email: process.env.EMAIL_USER,
+                    name: 'Park Reviews'
+                },
                 subject: 'Verify Your Email',
                 html: `<p>Thank you for signing up! Please <a href="${verifyLink}">click here</a> to verify your account.</p>`
-            });
+            };
+
+            await sgMail.send(msg);
 
             // Register successful
             res.status(201).json({
@@ -65,7 +65,7 @@ module.exports = function (db) {
                 error: ''
             });
         } catch (err) {
-            console.error(err);
+            console.error('Register Error:', err);
             res.status(500).json({ error: 'Internal server error' });
         }
     });
