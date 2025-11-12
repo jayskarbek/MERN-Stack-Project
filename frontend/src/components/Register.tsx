@@ -88,11 +88,12 @@ const Register: React.FC = () => {
         borderRadius: '12px',
         border: '2px solid #e0e0e0',
         backgroundColor: '#fff',
+        color: '#000', 
         transition: 'border-color 0.3s',
         marginBottom: '12px',
         outline: 'none',
-    };
-
+      };
+      
   return (
     <div style={backgroundStyle}>
         <div style={formContainerStyle}>
