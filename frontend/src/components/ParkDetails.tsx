@@ -55,7 +55,8 @@ const ParkDetails: React.FC = () => {
                 alignItems: 'center',
                 minHeight: '400px',
                 fontSize: '18px',
-                color: '#6c757d'
+                color: '#6c757d',
+                paddingTop: '80px'
             }}>
                 Loading park details...
             </div>
@@ -71,7 +72,8 @@ const ParkDetails: React.FC = () => {
                 backgroundColor: '#fff3cd',
                 border: '1px solid #ffc107',
                 borderRadius: '8px',
-                color: '#856404'
+                color: '#856404',
+                marginTop: '100px'
             }}>
                 {error}
             </div>
@@ -84,10 +86,12 @@ const ParkDetails: React.FC = () => {
                 maxWidth: '600px',
                 margin: '40px auto',
                 padding: '20px',
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#fff',
                 borderRadius: '8px',
                 textAlign: 'center',
-                color: '#6c757d'
+                color: '#6c757d',
+                marginTop: '100px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
             }}>
                 Park not found.
             </div>
@@ -99,7 +103,7 @@ const ParkDetails: React.FC = () => {
             maxWidth: '1000px', 
             margin: '0 auto', 
             padding: '20px',
-            backgroundColor: '#f8f9fa',
+            paddingTop: '100px',
             minHeight: '100vh'
         }}>
             <div style={{
