@@ -172,7 +172,6 @@ const StateParkList: React.FC = () => {
 
     return (
         <div style={{ paddingTop: '80px', padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
-            {/* Search and Filter Component */}
             <ParkSearchFilter
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -190,7 +189,6 @@ const StateParkList: React.FC = () => {
                 isSearching={isSearching}
             />
 
-            {/* Loading State for My Reviews */}
             {loadingReviewed && (
                 <div style={{
                     padding: '40px',
@@ -206,7 +204,6 @@ const StateParkList: React.FC = () => {
                 </div>
             )}
 
-            {/* Parks Grid */}
             {!loadingReviewed && parks.length === 0 ? (
                 <div style={{
                     padding: '60px 20px',

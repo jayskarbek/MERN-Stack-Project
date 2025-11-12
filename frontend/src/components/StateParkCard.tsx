@@ -45,8 +45,6 @@ const StateParkCard: React.FC<StateParkProps> = ({
                 <img src={image_url} alt={name} className="state-park-image" />
                 <div className="state-park-info">
                     <h2 className="state-park-name">{name}</h2>
-                    
-                    {/* Rating Section */}
                     <div style={{ 
                         display: 'flex', 
                         alignItems: 'center', 

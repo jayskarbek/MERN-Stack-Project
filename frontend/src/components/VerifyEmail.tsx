@@ -7,7 +7,7 @@ const VerifyEmail: React.FC = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
-        const timer = setTimeout(() => navigate('/login'), 3000);  // Add the leading slash
+        const timer = setTimeout(() => navigate('/login'), 3000);
         return () => clearTimeout(timer);
     }, [navigate]);
     
@@ -22,32 +22,65 @@ const VerifyEmail: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: '20px',
     };
     
-    const box: React.CSSProperties = {
-        padding: '15px',
-        width: '30%',
-        height: '15%',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: '20px', 
+    const boxStyle: React.CSSProperties = {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '20px',
+        padding: '40px',
+        maxWidth: '450px',
+        width: '100%',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        textAlign: 'center',
     };
     
     return (
         <div style={backgroundStyle}>
-            <div style={box}>
-                <h1 
-                    style={{ 
-                        fontSize: '2.25rem', 
-                        marginBottom: '1rem' 
-                    }}>
+            <div style={boxStyle}>
+                <h1 style={{ 
+                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    color: '#2c5f2d',
+                    marginBottom: '16px',
+                    marginTop: '0'
+                }}>
                     Account Verified!
                 </h1>
-                <p 
-                    style={{ 
-                        fontSize: '1.25rem' 
-                    }}>
-                    Redirecting to login...
+                
+                <p style={{ 
+                    fontSize: '16px',
+                    color: '#666',
+                    marginBottom: '24px'
+                }}>
+                    Your email has been successfully verified. Redirecting to login...
                 </p>
+
+                <button
+                    onClick={() => navigate('/login')}
+                    style={{
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        padding: '12px 24px',
+                        width: '100%',
+                        backgroundColor: 'transparent',
+                        color: '#2c5f2d',
+                        border: '2px solid #2c5f2d',
+                        borderRadius: '12px',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#2c5f2d';
+                        e.currentTarget.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#2c5f2d';
+                    }}
+                >
+                    Go to Login
+                </button>
             </div>
             
             <div

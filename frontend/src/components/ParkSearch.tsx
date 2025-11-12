@@ -61,7 +61,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 gap: '16px',
                 alignItems: 'end'
             }}>
-                {/* Search Input */}
+                
                 <div style={{ flex: '2', minWidth: '250px' }}>
                     <label style={{
                         display: 'block',
@@ -113,7 +113,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </div>
                 </div>
 
-                {/* County Filter */}
                 <div style={{ flex: '1', minWidth: '200px' }}>
                     <label style={{
                         display: 'block',
@@ -149,7 +148,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
-                {/* Sort By */}
                 <div style={{ flex: '1', minWidth: '200px' }}>
                     <label style={{
                         display: 'block',
@@ -187,7 +185,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
-                {/* Clear Filters Button */}
                 {showClearButton && (
                     <div style={{ flex: '0 0 auto' }}>
                         <button
@@ -214,7 +211,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 )}
             </div>
 
-            {/* My Reviews Toggle */}
             {isAuthenticated && (
                 <div style={{
                     marginTop: '20px',
