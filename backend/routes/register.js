@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 module.exports = function (db) {
     const router = express.Router();
     const users = db.collection('Users');
-    const verifyLink = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
 
     router.post('/register', async (req, res) => {
         try {
@@ -42,7 +41,7 @@ module.exports = function (db) {
                 Verified: false
             });
 
-             const transporter = nodemailer.createTransport({
+            const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
                     user: process.env.EMAIL_USER,
@@ -50,12 +49,12 @@ module.exports = function (db) {
                 }
             });
             
-            const verifyLink = `${backendURL}/verify/${verificationToken}`;
+            const verifyLink = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
             await transporter.sendMail({
                 to: email,
                 subject: 'Verify Your Email',
                 html: `<p>Thank you for signing up! Please <a href="${verifyLink}">click here</a> to verify your account.</p>`
-            })
+            });
 
             // Register successful
             res.status(201).json({
