@@ -26,7 +26,7 @@ class AuthController extends ChangeNotifier {
   UserProfile? get user => _user;
 
   Future<bool> login({
-    required String username,
+    required String email,
     required String password,
   }) async {
     _setLoading(true);
@@ -34,7 +34,7 @@ class AuthController extends ChangeNotifier {
 
     try {
       final result =
-          await _repository.login(login: username, password: password);
+          await _repository.login(email: email, password: password);
       _token = result.token;
       _user = result.user;
       _apiClient.updateAuthToken(_token);
@@ -53,7 +53,7 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<bool> register({
-    required String username,
+    required String email,
     required String password,
     required String firstName,
     required String lastName,
@@ -63,7 +63,7 @@ class AuthController extends ChangeNotifier {
 
     try {
       await _repository.register(
-        login: username,
+        email: email,
         password: password,
         firstName: firstName,
         lastName: lastName,
@@ -71,7 +71,7 @@ class AuthController extends ChangeNotifier {
       _setLoading(false);
 
       // Auto-login after registration
-      return loginUser(username: username, password: password);
+      return loginUser(email: email, password: password);
     } on ApiException catch (err) {
       _handleError(err.message);
       return false;
@@ -85,10 +85,10 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<bool> loginUser({
-    required String username,
+    required String email,
     required String password,
   }) {
-    return login(username: username, password: password);
+    return login(email: email, password: password);
   }
 
   void logout() {

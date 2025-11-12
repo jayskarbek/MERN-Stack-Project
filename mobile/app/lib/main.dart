@@ -46,9 +46,12 @@ Future<void> main() async {
 Future<void> _loadEnv() async {
   try {
     await dotenv.load();
+    if (kDebugMode) {
+      debugPrint('✅ Loaded API_BASE_URL: ${dotenv.env['API_BASE_URL']}');
+    }
   } catch (err) {
     if (kDebugMode) {
-      debugPrint('dotenv load failed: $err');
+      debugPrint('❌ dotenv load failed: $err');
     }
     try {
       await dotenv.load(fileName: '.env.example');

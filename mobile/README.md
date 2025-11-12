@@ -59,6 +59,21 @@ flutter run                  # chooses an attached emulator/device
 flutter run -d chrome
 ```
 
+### API Smoke Test
+Use the helper script to confirm the hosted backend (e.g., `https://ratingflstateparks.xyz/api`) is reachable before launching Flutter:
+```bash
+chmod +x ../scripts/api_smoke.sh
+API_BASE_URL=https://ratingflstateparks.xyz/api \
+../scripts/api_smoke.sh
+```
+To test authenticated routes, append credentials for a known user:
+```bash
+LOGIN_USERNAME=myuser \
+LOGIN_PASSWORD=mypassword \
+API_BASE_URL=https://ratingflstateparks.xyz/api \
+../scripts/api_smoke.sh
+```
+
 The app automatically wires up:
 - login/registration flows using the existing `/api/login` & `/api/register`
   routes.

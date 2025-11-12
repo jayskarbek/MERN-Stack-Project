@@ -9,13 +9,13 @@ class AuthRepository {
   final ApiClient _apiClient;
 
   Future<AuthResult> login({
-    required String login,
+    required String email,
     required String password,
   }) async {
     final response = await _apiClient.post(
       '/login',
       body: <String, dynamic>{
-        'login': login,
+        'email': email,
         'password': password,
       },
     );
@@ -36,7 +36,7 @@ class AuthRepository {
   }
 
   Future<UserProfile> register({
-    required String login,
+    required String email,
     required String password,
     required String firstName,
     required String lastName,
@@ -44,7 +44,7 @@ class AuthRepository {
     final response = await _apiClient.post(
       '/register',
       body: <String, dynamic>{
-        'login': login,
+        'email': email,
         'password': password,
         'firstName': firstName,
         'lastName': lastName,

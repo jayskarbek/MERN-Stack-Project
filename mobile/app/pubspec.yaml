@@ -9,11 +9,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  # Original dependencies
   cupertino_icons: ^1.0.8
   http: ^1.2.2
   provider: ^6.1.2
   flutter_dotenv: ^5.1.0
   flutter_secure_storage: ^9.2.2
+  
+  
+  # Essential image enhancement packages (fixes blurry images)
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.3.1
+  
+  # Optional but recommended UI enhancements
+  shimmer: ^3.0.0  # For smooth loading effects (optional)
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +34,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - .env
+    - .env.example
