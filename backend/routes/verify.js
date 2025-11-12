@@ -7,6 +7,7 @@ module.exports = function (db) {
     // Verify email by token
     router.get('/:token', async (req, res) => {
         const { token } = req.params;
+        const frontendURL = process.env.FRONTEND_URL || 'http://134.199.193.253:5100';
 
         try {
             // Find user with the token
@@ -23,7 +24,7 @@ module.exports = function (db) {
             );
 
             // Go to verify confirmation page
-            return res.redirect(`${process.env.FRONTEND_URL}/verifyemail`);
+            return res.redirect(`${frontendURL}/verifyemail`);
         } catch (err) {
             console.error('Verification error:', err);
             return res.status(500).send('Internal server error.');
@@ -32,5 +33,3 @@ module.exports = function (db) {
 
     return router;
 };
-
-

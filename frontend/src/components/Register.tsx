@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { buildApiUrl } from '../utils/api';
 import './Register.css';
 
 const Register: React.FC = () => { 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -13,10 +14,6 @@ const Register: React.FC = () => {
     const [lastName, setLastName] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
-    function buildPath(route: string) {
-        return `/api/${route}`;
-    }
 
     async function doRegister(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -32,7 +29,7 @@ const Register: React.FC = () => {
         }
 
         try {
-            const response = await fetch(buildPath('register'), {
+            const response = await fetch(buildApiUrl('register'), {
                 method: 'POST',
                 body: JSON.stringify({ email, password, firstName, lastName }),
                 headers: { 'Content-Type': 'application/json' },
@@ -47,9 +44,10 @@ const Register: React.FC = () => {
             }
 
             setError('');
-            setSuccess('Registration Successful! Please check your emai lto verify your account! ');
+            setSuccess('Registration Successful! Please check your email to verify your account! ');
             console.log('Registered user:', res.user);
 
+            setTimeout(() => navigate('/login'), 3000);
 
         } catch (err) {
             console.error('Fetch error:', err);

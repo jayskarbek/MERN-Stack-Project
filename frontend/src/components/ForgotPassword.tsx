@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { buildApiUrl } from '../utils/api';
 import './ForgotPassword.css';
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
-    function buildPath(route: string) {
-        return `/api/${route}`;
-    }
 
     async function doForgotPass(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -22,7 +18,7 @@ const ForgotPassword: React.FC = () => {
         }
 
         try {
-            const response = await fetch(buildPath('forgotpass'), {
+            const response = await fetch(buildApiUrl('forgotpass'), {
                 method: 'POST',
                 body: JSON.stringify({ email }),
                 headers: { 'Content-Type': 'application/json' },
@@ -38,7 +34,6 @@ const ForgotPassword: React.FC = () => {
 
             setError('');
             setSuccess('Password reset link sent to your email!');
-
         } catch (err) {
             console.error('Fetch error:', err);
             setError('Error connecting to the server');

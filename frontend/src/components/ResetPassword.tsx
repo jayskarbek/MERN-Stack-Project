@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { buildApiUrl } from '../utils/api';
 import './Login.css';
 
 const ResetPassword: React.FC = () => {
@@ -22,9 +23,6 @@ const ResetPassword: React.FC = () => {
         }
     }, [email, token]);
 
-    function buildPath(route: string) {
-        return `/api/${route}`;
-    }
     async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
@@ -42,7 +40,7 @@ const ResetPassword: React.FC = () => {
         setError('');
 
         try { 
-            const response = await fetch(buildPath('resetpass'), {
+            const response = await fetch(buildApiUrl('resetpass'), {
                 method: 'POST',
                 body: JSON.stringify({ email, token, newPassword: password }),
                 headers: { 'Content-Type': 'application/json' },
@@ -51,7 +49,6 @@ const ResetPassword: React.FC = () => {
             const res = await response.json();
 
             if (!response.ok) {
-                // Handle error responses
                 setError(res.error);
                 setIsLoading(false);
                 return;
@@ -130,16 +127,15 @@ const ResetPassword: React.FC = () => {
                         {error}
                     </div>
                 }
-	{success &&
-    		<div style={{
-        		fontSize: '15px',
-        		color: 'green',
-        		marginBottom: '10px',
-        		fontWeight: 'bold'
-    		}}>
-        		{success}
-    		</div>
-	}
+                {success && 
+                    <div style={{
+                        fontSize: '15px',  
+                        color: 'green', 
+                        marginBottom: '10px' 
+                    }}>
+                        {success}
+                    </div>
+                }
                 <input
                     type="submit"
                     id="loginButton"
