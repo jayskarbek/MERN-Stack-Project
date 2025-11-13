@@ -5,6 +5,7 @@ import ReviewsList from './ReviewsList';
 import ReviewForm from './ReviewForm';
 import { buildApiUrl } from '../utils/api';
 import type { RatingSet, Review } from '../types/Review';
+import { getDisplayUrl } from '../utils/wikipediaImageHelper';
 
 interface Park {
     _id: string;
@@ -98,6 +99,8 @@ const ParkDetails: React.FC = () => {
         );
     }
 
+    const heroImageUrl = getDisplayUrl(park.image_url, 1600);
+
     return (
         <div style={{ 
             maxWidth: '1000px', 
@@ -114,7 +117,7 @@ const ParkDetails: React.FC = () => {
                 marginBottom: '30px'
             }}>
                 <img 
-                    src={park.image_url} 
+                    src={heroImageUrl} 
                     alt={park.name} 
                     style={{ 
                         width: '100%', 
