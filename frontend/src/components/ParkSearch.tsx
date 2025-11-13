@@ -15,7 +15,7 @@ interface ParkSearchFilterProps {
     showClearButton: boolean;
     showMyReviews: boolean;
     setShowMyReviews: (value: boolean) => void;
-    isSearching?: boolean; // Optional: shows "Searching..." indicator
+    isSearching?: boolean;
 }
 
 const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({

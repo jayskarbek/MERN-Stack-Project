@@ -4,7 +4,6 @@ const { ObjectId } = require('mongodb');
 let db;
 let reviewsCollection;
 
-// Extract the rating calculation logic for testing
 async function calculateParkRatings(reviewsCollection, parkId) {
     const reviews = await reviewsCollection.find({ parkId: parkId.toString() }).toArray();
     
@@ -108,8 +107,6 @@ describe('Rating Calculation Utilities', () => {
 
         const ratings = await calculateParkRatings(reviewsCollection, parkId);
 
-        // (5+3)/2 = 4, (5+4)/2 = 4.5, (5+3)/2 = 4
-        // Overall: (4 + 4.5 + 4) / 3 = 4.16666... ≈ 4.2
         expect(ratings.averageRating).toBe(4.2);
         expect(ratings.reviewCount).toBe(2);
         expect(ratings.ratingBreakdown.views).toBe(4);
@@ -145,7 +142,7 @@ describe('Rating Calculation Utilities', () => {
         expect(ratings.ratingBreakdown.location).toBeCloseTo(4.0, 1);
         expect(ratings.ratingBreakdown.amenities).toBeCloseTo(4.0, 1);
         
-        // Verify they are properly rounded (no more than 1 decimal)
+        // Verify they are properly rounded 
         expect(Number.isInteger(ratings.averageRating * 10)).toBe(true);
         expect(Number.isInteger(ratings.ratingBreakdown.views * 10)).toBe(true);
         expect(Number.isInteger(ratings.ratingBreakdown.location * 10)).toBe(true);
@@ -162,7 +159,6 @@ describe('Rating Calculation Utilities', () => {
 
         const ratings = await calculateParkRatings(reviewsCollection, parkId);
 
-        // Should treat missing fields as 0
         expect(ratings.averageRating).toBe(1.7); // (5+0+0)/3 ≈ 1.7
         expect(ratings.reviewCount).toBe(1);
     });

@@ -16,7 +16,7 @@ describe('Password Hashing - Unit Tests', () => {
             const hash1 = await bcrypt.hash(password, 10);
             const hash2 = await bcrypt.hash(password, 10);
             
-            expect(hash1).not.toBe(hash2); // Salts make them different
+            expect(hash1).not.toBe(hash2); 
         });
     });
 

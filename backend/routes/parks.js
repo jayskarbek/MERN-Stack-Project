@@ -50,7 +50,7 @@ async function calculateParkRatings(parkId) {
     };
 }
 
-    // Get all parks with ratings (Public - No authentication required)
+    // Get all parks with ratings
     router.get('/parks', async (req, res) => {
         try {
             const parks = await parksCollection.find().toArray();
@@ -73,7 +73,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Get parks that the user has reviewed (Protected - Requires authentication)
+    // Get parks that the user has reviewed 
     router.get('/my-reviewed-parks', authenticateToken, async (req, res) => {
         try {
             const userId = req.user.userId;
@@ -92,7 +92,7 @@ async function calculateParkRatings(parkId) {
             const parkIds = [...new Set(userReviews.map(review => review.parkId))];
             console.log('Unique park IDs from reviews:', parkIds);
             
-            // Convert string IDs to ObjectIds, handling any invalid IDs
+            // Convert string IDs to ObjectIds
             const objectIds = parkIds.map(id => {
                 try {
                     return new ObjectId(id);
@@ -139,7 +139,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Search parks with filters and sorting (Public - No authentication required)
+    // Search parks with filters and sorting
     router.get('/parks/search', async (req, res) => {
         try {
             const { query, county, sort } = req.query;
@@ -147,7 +147,7 @@ async function calculateParkRatings(parkId) {
             
             let filter = {};
             
-            // Search by park name or location (case-insensitive)
+            // Search by park name or location 
             if (query && query.trim() !== '') {
                 filter.$or = [
                     { name: { $regex: query, $options: 'i' } },
@@ -208,7 +208,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Get a specific park by ID with ratings (Public - No authentication required)
+    // Get a specific park by ID with ratings 
     router.get('/parks/:id', async (req, res) => {
         try {
             const park = await parksCollection.findOne({ _id: new ObjectId(req.params.id) });
@@ -227,7 +227,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Get reviews for a specific park (Public - No authentication required)
+    // Get reviews for a specific park 
     router.get('/parks/:id/reviews', async (req, res) => {
         try {
             const parkId = req.params.id;
@@ -263,7 +263,6 @@ async function calculateParkRatings(parkId) {
             
             let user;
             if (isValidObjectId) {
-                // Try both _id and UserID fields for ObjectId
                 user = await usersCollection.findOne({ 
                     $or: [
                         { _id: new ObjectId(userId) },
@@ -271,7 +270,6 @@ async function calculateParkRatings(parkId) {
                     ]
                 });
             } else {
-                // For non-ObjectId strings, only search UserID field
                 user = await usersCollection.findOne({ UserID: userId });
             }
 
@@ -298,7 +296,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Update a review (Protected - User can only update their own reviews)
+    // Update a review 
     router.patch('/parks/:parkId/reviews/:reviewId', authenticateToken, async (req, res) => {
         try {
             const { parkId, reviewId } = req.params;
@@ -337,7 +335,7 @@ async function calculateParkRatings(parkId) {
         }
     });
 
-    // Delete a review (Protected - User can only delete their own reviews)
+    // Delete a review
     router.delete('/parks/:parkId/reviews/:reviewId', authenticateToken, async (req, res) => {
         try {
             const { reviewId } = req.params;

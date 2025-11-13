@@ -49,7 +49,6 @@ const StateParkList: React.FC = () => {
         fetchAllParks();
     }, []);
 
-    // Server-side search when filters change - INSTANT with request cancellation
     useEffect(() => {
         // Don't search if showing reviewed parks
         if (showMyReviews) return;
@@ -74,7 +73,6 @@ const StateParkList: React.FC = () => {
                     params.county = selectedCounty;
                 }
 
-                // Call the server-side search endpoint with abort signal
                 const response = await axios.get(buildApiUrl('parks/search'), { 
                     params,
                     signal: abortController.signal
@@ -98,7 +96,7 @@ const StateParkList: React.FC = () => {
 
         searchParks();
 
-        // Cleanup: cancel the request if component unmounts or search changes
+        // Cancel the request if component unmounts or search changes
         return () => {
             abortController.abort();
         };

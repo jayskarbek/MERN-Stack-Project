@@ -99,7 +99,6 @@ describe('Authentication Middleware', () => {
 
         authenticateToken(req, res, next);
 
-        // The actual middleware returns 403 when it can't extract the token properly
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalled();
         expect(next).not.toHaveBeenCalled();

@@ -20,7 +20,7 @@ describe('JWT Token Generation - Unit Tests', () => {
             
             expect(token).toBeDefined();
             expect(typeof token).toBe('string');
-            expect(token.split('.')).toHaveLength(3); // JWT has 3 parts
+            expect(token.split('.')).toHaveLength(3); 
         });
 
         test('should include expiration time', () => {
