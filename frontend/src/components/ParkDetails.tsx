@@ -3,24 +3,9 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import ReviewsList from './ReviewsList';
 import ReviewForm from './ReviewForm';
+import { buildApiUrl } from '../utils/api';
 import type { RatingSet, Review } from '../types/Review';
-
-
-// interface RatingSet {
-//     views: number;
-//     location: number;
-//     amenities: number;
-// }
-
-// interface Review {
-//     _id: string;
-//     ratings: RatingSet;
-//     comment: string;
-//     userId: string;
-//     userName?: string;
-//     createdAt: string;
-// }
-
+import { getDisplayUrl } from '../utils/wikipediaImageHelper';
 
 interface Park {
     _id: string;
@@ -42,10 +27,10 @@ const ParkDetails: React.FC = () => {
 
     const fetchParkDetails = async () => {
         try {
-            const parkResponse = await axios.get(`http://localhost:5000/api/parks/${id}`);
+            const parkResponse = await axios.get(buildApiUrl(`parks/${id}`));
             setPark(parkResponse.data);
 
-            const reviewsResponse = await axios.get(`http://localhost:5000/api/parks/${id}/reviews`);
+            const reviewsResponse = await axios.get(buildApiUrl(`parks/${id}/reviews`));
             setReviews(reviewsResponse.data);
         } catch (err) {
             console.error('Error fetching park details:', err);
@@ -60,7 +45,6 @@ const ParkDetails: React.FC = () => {
     }, [id]);
 
     const handleReviewSubmitted = () => {
-        // Refresh the reviews and park data after submission
         fetchParkDetails();
     };
 
@@ -72,7 +56,8 @@ const ParkDetails: React.FC = () => {
                 alignItems: 'center',
                 minHeight: '400px',
                 fontSize: '18px',
-                color: '#6c757d'
+                color: '#6c757d',
+                paddingTop: '80px'
             }}>
                 Loading park details...
             </div>
@@ -88,7 +73,8 @@ const ParkDetails: React.FC = () => {
                 backgroundColor: '#fff3cd',
                 border: '1px solid #ffc107',
                 borderRadius: '8px',
-                color: '#856404'
+                color: '#856404',
+                marginTop: '100px'
             }}>
                 {error}
             </div>
@@ -101,25 +87,28 @@ const ParkDetails: React.FC = () => {
                 maxWidth: '600px',
                 margin: '40px auto',
                 padding: '20px',
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#fff',
                 borderRadius: '8px',
                 textAlign: 'center',
-                color: '#6c757d'
+                color: '#6c757d',
+                marginTop: '100px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
             }}>
                 Park not found.
             </div>
         );
     }
 
+    const heroImageUrl = getDisplayUrl(park.image_url, 1600);
+
     return (
         <div style={{ 
             maxWidth: '1000px', 
             margin: '0 auto', 
             padding: '20px',
-            backgroundColor: '#f8f9fa',
+            paddingTop: '100px',
             minHeight: '100vh'
         }}>
-            {/* Park Header Card */}
             <div style={{
                 backgroundColor: '#fff',
                 borderRadius: '12px',
@@ -127,9 +116,8 @@ const ParkDetails: React.FC = () => {
                 overflow: 'hidden',
                 marginBottom: '30px'
             }}>
-                {/* Park Image */}
                 <img 
-                    src={park.image_url} 
+                    src={heroImageUrl} 
                     alt={park.name} 
                     style={{ 
                         width: '100%', 
@@ -138,7 +126,6 @@ const ParkDetails: React.FC = () => {
                     }} 
                 />
                 
-                {/* Park Info */}
                 <div style={{ padding: '30px' }}>
                     <h1 style={{ 
                         fontSize: '36px', 
@@ -193,7 +180,6 @@ const ParkDetails: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Average Ratings */}
                     {park.ratingBreakdown && park.reviewCount && park.reviewCount > 0 && (
                         <div style={{ marginTop: '30px' }}>
                             <h3 style={{ 
@@ -244,7 +230,6 @@ const ParkDetails: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Visit Park Link */}
                     <a 
                         href={park.park_page} 
                         target="_blank" 
@@ -268,10 +253,8 @@ const ParkDetails: React.FC = () => {
                 </div>
             </div>
 
-            {/* Review Form */}
             {id && <ReviewForm parkId={id} onReviewSubmitted={handleReviewSubmitted} />}
 
-            {/* Reviews Section */}
             <ReviewsList reviews={reviews} onReviewUpdated={fetchParkDetails} parkId={id || ''} />
         </div>
     );

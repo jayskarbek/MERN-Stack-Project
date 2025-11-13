@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { buildApiUrl } from '../utils/api';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -10,10 +11,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
-    }
+    
     async function doLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
@@ -26,7 +24,7 @@ const Login: React.FC = () => {
         setError('');
 
         try { 
-            const response = await fetch(buildPath('api/login'), {
+            const response = await fetch(buildApiUrl('login'), {
                 method: 'POST',
                 body: JSON.stringify({ email, password }),
                 headers: { 'Content-Type': 'application/json' },
@@ -35,7 +33,6 @@ const Login: React.FC = () => {
             const res = await response.json();
 
             if (!response.ok) {
-                // Handle error responses
                 setError(res.error || 'Invalid username or password');
                 setIsLoading(false);
                 return;
@@ -49,7 +46,6 @@ const Login: React.FC = () => {
 
             console.log('Login successful:', res);
             
-            // Navigate to the card page
             navigate('/CardPage');
             
         } catch (err) {
@@ -71,111 +67,150 @@ const Login: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: '20px',
         position: 'relative',
+    };
+
+    const formContainerStyle: React.CSSProperties = {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '20px',
+        padding: '40px',
+        maxWidth: '420px',
+        width: '100%',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+    };
+
+    const inputStyle: React.CSSProperties = {
+        fontSize: '16px',
+        padding: '12px 20px',
+        width: '100%',
+        borderRadius: '12px',
+        border: '2px solid #e0e0e0',
+        backgroundColor: '#fff',
+        transition: 'border-color 0.3s',
+        marginBottom: '16px',
+        outline: 'none',
+        color: '#000',
     };
 
     return (
         <div style={backgroundStyle}>
-            <form id="loginDiv" onSubmit={doLogin} className="text-center">
-                <span id="inner-title">Login</span>
-                <br />
-                <input
-                    type="text"
-                    id="loginName"
-                    placeholder="Enter your email"
-                    className="form-control mx-auto my-3"
-                    style={{   
-                        fontSize: '25px', 
-                        width: '80%', 
-                        borderRadius: '25px', 
-                        backgroundColor: 'rgba(255,255,255,0.6)', 
-                        textAlign: 'center' 
-                    }}
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    disabled={isLoading}
-                />
-                <input
-                    type="password"
-                    id="loginPassword"
-                    placeholder="Enter your password"
-                    className="form-control mx-auto my-3"
-                    style={{ 
-                        fontSize: '25px', 
-                        width: '80%', 
-                        borderRadius: '25px', 
-                        backgroundColor: 'rgba(255,255,255,0.6)', 
-                        textAlign: 'center' 
-                    }}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    disabled={isLoading}
-                />
-                {error && 
+            <div style={formContainerStyle}>
+                <h2 style={{
+                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    color: '#2c5f2d',
+                    marginBottom: '30px',
+                    textAlign: 'center',
+                    marginTop: '0'
+                }}>
+                    Welcome Back
+                </h2>
+
+                <form onSubmit={doLogin}>
+                    <input
+                        type="email"
+                        placeholder="Email address"
+                        style={inputStyle}
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        onFocus={(e) => e.target.style.borderColor = '#2c5f2d'}
+                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                        disabled={isLoading}
+                    />
+
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        style={inputStyle}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        onFocus={(e) => e.target.style.borderColor = '#2c5f2d'}
+                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                        disabled={isLoading}
+                    />
+
                     <div style={{ 
-                        fontSize: '15px', 
-                        color: 'red', 
-                        marginBottom: '10px' 
+                        textAlign: 'right', 
+                        marginBottom: '20px',
+                        marginTop: '-8px'
                     }}>
-                        {error}
+                        <span
+                            onClick={() => !isLoading && navigate('/forgotpass')}
+                            style={{
+                                color: '#2c5f2d',
+                                fontSize: '14px',
+                                cursor: isLoading ? 'not-allowed' : 'pointer',
+                                opacity: isLoading ? 0.5 : 1,
+                                textDecoration: 'none',
+                                fontWeight: '500'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                            onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                        >
+                            Forgot Password?
+                        </span>
                     </div>
-                }
-                <p
-                    style={{
-                        marginTop: '10px',
-                        fontSize: '16px',
-                    }}
-                >
-                    <span
-                        onClick={() => !isLoading && navigate('/forgotpass')}
-                        style={{
-                            color: 'blue',
-                            textDecoration: 'underline',
+
+                    {error && 
+                        <div style={{ 
+                            fontSize: '14px', 
+                            color: '#dc3545',
+                            marginBottom: '16px',
+                            padding: '10px',
+                            backgroundColor: '#ffe6e6',
+                            borderRadius: '8px',
+                            textAlign: 'center'
+                        }}>
+                            {error}
+                        </div>
+                    }
+
+                    <button
+                        type="submit"
+                        style={{ 
+                            fontSize: '18px',
+                            fontWeight: '600',
+                            borderRadius: '12px',
+                            width: '100%',
+                            padding: '14px',
+                            border: 'none',
+                            backgroundColor: '#2c5f2d',
+                            color: 'white',
                             cursor: isLoading ? 'not-allowed' : 'pointer',
-                            opacity: isLoading ? 0.5 : 1
+                            transition: 'all 0.3s',
+                            marginBottom: '16px',
+                            opacity: isLoading ? 0.7 : 1
                         }}
+                        disabled={isLoading}
+                        onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#234d23')}
+                        onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#2c5f2d')}
                     >
-                        Forgot Password?
-                    </span>
-                </p>
-                <input
-                    type="submit"
-                    id="loginButton"
-                    className="btn btn-primary buttons"
-                    value={isLoading ? "Logging in..." : "Login"}
-                    style={{ 
-                        fontSize: '28px', 
-                        borderRadius: '25px', 
-                        width: '55%',
-                        margin: '0 auto', 
-                        display: 'block',
-                        backgroundColor: 'darkgreen',
-                        cursor: isLoading ? 'not-allowed' : 'pointer',
-                        opacity: isLoading ? 0.7 : 1
-                    }}
-                    disabled={isLoading}
-                />
-                <p
-                    style={{
-                        marginTop: '10px',
-                        fontSize: '16px',
-                    }}
-                >
-                    Don't have an account?{' '}
-                    <span
-                        onClick={() => !isLoading && navigate('/register')}
-                        style={{
-                            color: 'blue',
-                            textDecoration: 'underline',
-                            cursor: isLoading ? 'not-allowed' : 'pointer',
-                            opacity: isLoading ? 0.5 : 1
-                        }}
-                    >
-                        Register here
-                    </span>
-                </p>
-                <span id="loginResult"></span>
-            </form>
+                        {isLoading ? 'Logging in...' : 'Login'}
+                    </button>
+
+                    <div style={{ 
+                        textAlign: 'center',
+                        fontSize: '15px',
+                        color: '#666'
+                    }}>
+                        Don't have an account?{' '}
+                        <span
+                            onClick={() => !isLoading && navigate('/register')}
+                            style={{
+                                color: '#2c5f2d',
+                                cursor: isLoading ? 'not-allowed' : 'pointer',
+                                fontWeight: '600',
+                                opacity: isLoading ? 0.5 : 1
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                            onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                        >
+                            Sign up
+                        </span>
+                    </div>
+                </form>
+            </div>
             
             <div
                 style={{

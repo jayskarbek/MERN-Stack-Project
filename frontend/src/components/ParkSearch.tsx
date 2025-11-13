@@ -15,6 +15,7 @@ interface ParkSearchFilterProps {
     showClearButton: boolean;
     showMyReviews: boolean;
     setShowMyReviews: (value: boolean) => void;
+    isSearching?: boolean;
 }
 
 const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
@@ -30,7 +31,8 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
     onClearFilters,
     showClearButton,
     showMyReviews,
-    setShowMyReviews
+    setShowMyReviews,
+    isSearching = false
 }) => {
     const isAuthenticated = auth.isAuthenticated();
 
@@ -59,7 +61,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 gap: '16px',
                 alignItems: 'end'
             }}>
-                {/* Search Input */}
+                
                 <div style={{ flex: '2', minWidth: '250px' }}>
                     <label style={{
                         display: 'block',
@@ -68,7 +70,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                         color: '#2c3e50',
                         marginBottom: '8px'
                     }}>
-                        Search Parks
+                        Search Parks {isSearching && <span style={{ color: '#3498db', fontSize: '12px' }}>(searching...)</span>}
                     </label>
                     <div style={{ position: 'relative' }}>
                         <input
@@ -111,7 +113,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </div>
                 </div>
 
-                {/* County Filter */}
                 <div style={{ flex: '1', minWidth: '200px' }}>
                     <label style={{
                         display: 'block',
@@ -147,7 +148,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
-                {/* Sort By */}
                 <div style={{ flex: '1', minWidth: '200px' }}>
                     <label style={{
                         display: 'block',
@@ -185,7 +185,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
-                {/* Clear Filters Button */}
                 {showClearButton && (
                     <div style={{ flex: '0 0 auto' }}>
                         <button
@@ -212,7 +211,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 )}
             </div>
 
-            {/* My Reviews Toggle */}
             {isAuthenticated && (
                 <div style={{
                     marginTop: '20px',
@@ -267,7 +265,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     {searchTerm && ` for "${searchTerm}"`}
                     {showMyReviews && ' (your reviews)'}
                 </span>
-                {totalCount > 0 && (
+                {totalCount > 0 && !showMyReviews && (
                     <span style={{ fontSize: '13px' }}>
                         Total: {totalCount} parks
                     </span>

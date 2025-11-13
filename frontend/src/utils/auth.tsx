@@ -1,5 +1,3 @@
-// Utility functions for authentication
-
 export const auth = {
     // Save authentication data
     login: (token: string, userId: string, firstName: string, lastName: string) => {

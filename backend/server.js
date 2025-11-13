@@ -9,15 +9,18 @@ const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGODB_URI || 'mongodb+srv://hugoputigna:SzyF0sJk6Z40f1Uh@cardcluster.eup3fgb.mongodb.net/?retryWrites=true&w=majority&appName=CardCluster';
 const client = new MongoClient(url);
 
-const local = 'http://localhost:5100'
-const ipaddress = 'http://134.199.193.253:5100/'
-
 // App setup
+const allowedOrigins = process.env.CORS_ORIGIN 
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:5173'];
+
 app.use(cors({
-    origin: ipaddress,
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+    credentials: true
 }));
+
 app.use(express.json());
 
 // Connect to Database

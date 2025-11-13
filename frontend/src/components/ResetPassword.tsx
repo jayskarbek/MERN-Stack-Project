@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Login.css';
+import { buildApiUrl } from '../utils/api';
+import './Login.css'; 
 
 const ResetPassword: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -22,9 +23,6 @@ const ResetPassword: React.FC = () => {
         }
     }, [email, token]);
 
-    function buildPath(route: string) {
-        return `http://localhost:5000/${route}`;
-    }
     async function passReset(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         
@@ -40,9 +38,10 @@ const ResetPassword: React.FC = () => {
 
         setIsLoading(true);
         setError('');
+        setSuccess('');
 
         try { 
-            const response = await fetch(buildPath('api/resetpass'), {
+            const response = await fetch(buildApiUrl('resetpass'), {
                 method: 'POST',
                 body: JSON.stringify({ email, token, newPassword: password }),
                 headers: { 'Content-Type': 'application/json' },
@@ -51,8 +50,7 @@ const ResetPassword: React.FC = () => {
             const res = await response.json();
 
             if (!response.ok) {
-                // Handle error responses
-                setError(res.error);
+                setError(res.error || 'Failed to reset password.');
                 setIsLoading(false);
                 return;
             }
@@ -64,7 +62,7 @@ const ResetPassword: React.FC = () => {
             
         } catch (err) {
             console.error('Fetch error:', err);
-            setError('Error connecting to the Server');
+            setError('Error connecting to the server');
         } finally {
             setIsLoading(false);
         }
@@ -82,73 +80,131 @@ const ResetPassword: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
+        padding: '20px',
+    };
+
+    const formContainerStyle: React.CSSProperties = {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '20px',
+        padding: '40px',
+        maxWidth: '420px',
+        width: '100%',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        textAlign: 'center',
+    };
+
+    const inputStyle: React.CSSProperties = {
+        fontSize: '20px',
+        width: '100%',
+        borderRadius: '14px',
+        backgroundColor: '#fff',
+        color: '#000',
+        border: '2px solid #e0e0e0',
+        textAlign: 'center',
+        padding: '12px 16px',
+        marginBottom: '16px',
+        transition: 'border-color 0.3s',
+        outline: 'none',
+    };
+
+    const buttonStyle: React.CSSProperties = {
+        fontSize: '20px',
+        borderRadius: '14px',
+        width: '70%',
+        margin: '0 auto',
+        display: 'block',
+        backgroundColor: '#2c5f2d',
+        color: 'white',
+        fontWeight: 600,
+        padding: '12px',
+        cursor: isLoading ? 'not-allowed' : 'pointer',
+        opacity: isLoading ? 0.7 : 1,
+        border: 'none',
+        transition: 'all 0.3s',
     };
 
     return (
         <div style={backgroundStyle}>
-            <form id="loginDiv" onSubmit={passReset} className="text-center">
-                <span id="inner-title">Reset Password</span>
-                <br />
-                <input
-                    type="password"
-                    id="newPassword"
-                    placeholder="New Password"
-                    className="form-control mx-auto my-3"
-                    style={{   
-                        fontSize: '25px', 
-                        width: '80%', 
-                        borderRadius: '25px', 
-                        backgroundColor: 'rgba(255,255,255,0.6)', 
-                        textAlign: 'center' 
-                    }}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    disabled={isLoading}
-                />
-                <input
-                    type="password"
-                    id="confirmPass"
-                    placeholder="Confirm Password"
-                    className="form-control mx-auto my-3"
-                    style={{ 
-                        fontSize: '25px', 
-                        width: '80%', 
-                        borderRadius: '25px', 
-                        backgroundColor: 'rgba(255,255,255,0.6)', 
-                        textAlign: 'center' 
-                    }}
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    disabled={isLoading}
-                />
-                {error && 
-                    <div style={{ 
-                        fontSize: '15px', 
-                        color: 'red', 
-                        marginBottom: '10px' 
-                    }}>
-                        {error}
-                    </div>
-                }
-                <input
-                    type="submit"
-                    id="loginButton"
-                    className="btn btn-primary buttons"
-                    value={isLoading ? "Updating..." : "Reset Password"}
-                    style={{ 
-                        fontSize: '28px', 
-                        borderRadius: '25px', 
-                        width: '55%',
-                        margin: '0 auto', 
-                        display: 'block',
-                        backgroundColor: 'darkgreen',
-                        cursor: isLoading ? 'not-allowed' : 'pointer',
-                        opacity: isLoading ? 0.7 : 1
-                    }}
-                    disabled={isLoading}
-                />
-                <span id="loginResult"></span>
-            </form>
+            <div style={formContainerStyle}>
+                <h2 style={{
+                    fontSize: '30px',
+                    fontWeight: 'bold',
+                    color: '#2c5f2d',
+                    marginBottom: '20px',
+                }}>
+                    Reset Password
+                </h2>
+
+                <form onSubmit={passReset}>
+                    <input
+                        type="password"
+                        placeholder="New Password"
+                        style={inputStyle}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        onFocus={(e) => e.target.style.borderColor = '#2c5f2d'}
+                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                        disabled={isLoading}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Confirm Password"
+                        style={inputStyle}
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        onFocus={(e) => e.target.style.borderColor = '#2c5f2d'}
+                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                        disabled={isLoading}
+                    />
+
+                    {error && (
+                        <div style={{ 
+                            fontSize: '14px', 
+                            color: '#dc3545',
+                            marginBottom: '12px',
+                            padding: '10px',
+                            backgroundColor: '#ffe6e6',
+                            borderRadius: '8px',
+                        }}>
+                            {error}
+                        </div>
+                    )}
+
+                    {success && (
+                        <div style={{
+                            fontSize: '14px',  
+                            color: '#28a745',
+                            marginBottom: '12px',
+                            padding: '10px',
+                            backgroundColor: '#e6ffe6',
+                            borderRadius: '8px',
+                        }}>
+                            {success}
+                        </div>
+                    )}
+
+                    <button
+                        type="submit"
+                        style={buttonStyle}
+                        onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#234d23')}
+                        onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#2c5f2d')}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Updating...' : 'Reset Password'}
+                    </button>
+                </form>
+
+                <div style={{
+                    marginTop: '20px',
+                    fontSize: '15px',
+                    color: '#2c5f2d',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                }}
+                onClick={() => !isLoading && navigate('/login')}>
+                    Return to Login
+                </div>
+            </div>
             
             <div
                 style={{

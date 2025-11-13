@@ -19,7 +19,7 @@ async function setupTestDB() {
     return { client, db };
 }
 
-// Teardown after all tests
+// Remove after all tests
 async function teardownTestDB() {
     if (client) {
         await client.close();
