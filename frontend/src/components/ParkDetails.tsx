@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ReviewsList from './ReviewsList';
 import ReviewForm from './ReviewForm';
 import type { RatingSet, Review } from '../types/Review';
+import { getDisplayUrl } from '../utils/wikipediaImageHelper';
 
 
 // interface RatingSet {
@@ -111,6 +112,8 @@ const ParkDetails: React.FC = () => {
         );
     }
 
+    const heroImageUrl = getDisplayUrl(park.image_url, 1600);
+
     return (
         <div style={{ 
             maxWidth: '1000px', 
@@ -129,7 +132,7 @@ const ParkDetails: React.FC = () => {
             }}>
                 {/* Park Image */}
                 <img 
-                    src={park.image_url} 
+                    src={heroImageUrl} 
                     alt={park.name} 
                     style={{ 
                         width: '100%', 

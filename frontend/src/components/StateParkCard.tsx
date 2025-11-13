@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getDisplayUrl } from '../utils/wikipediaImageHelper';
 import './StateParkCard.css';
 
 interface StateParkProps {
@@ -39,10 +40,12 @@ const StateParkCard: React.FC<StateParkProps> = ({
         return stars;
     };
 
+    const displayImageUrl = getDisplayUrl(image_url);
+
     return (
         <Link to={`/parks/${id}`} className="state-park-card-link">
             <div className="state-park-card">
-                <img src={image_url} alt={name} className="state-park-image" />
+                <img src={displayImageUrl} alt={name} className="state-park-image" />
                 <div className="state-park-info">
                     <h2 className="state-park-name">{name}</h2>
                     
