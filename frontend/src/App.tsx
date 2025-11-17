@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import CardPage from './pages/CardPage.tsx';
 import ParkDetailsPage from './pages/ParkDetailsPage';
 import MapPage from './pages/MapPage';
+import ProfilePageWrapper from './pages/ProfilePageWrapper';
 import { auth } from './utils/auth';
 import VerifyEmail from './components/VerifyEmail';
 import ForgotPassPage from './pages/ForgotPassPage';
@@ -39,6 +40,22 @@ function App() {
                 element={
                     <ProtectedRoute>
                         <MapPage />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/profile" 
+                element={
+                    <ProtectedRoute>
+                        <ProfilePageWrapper />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/profile/:userId" 
+                element={
+                    <ProtectedRoute>
+                        <ProfilePageWrapper />
                     </ProtectedRoute>
                 } 
             />

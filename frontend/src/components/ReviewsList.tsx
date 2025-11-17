@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../utils/auth';
 import { buildApiUrl } from '../utils/api';
 import type { Review } from '../types/Review';
@@ -27,6 +28,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
         overall: 0
     });
     const currentUserId = auth.getUserId();
+    const navigate = useNavigate();
 
     const handleEditClick = (review: Review) => {
         setEditingReviewId(review._id);
@@ -145,13 +147,24 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
                                     alignItems: 'center',
                                     marginBottom: '12px'
                                 }}>
-                                    <p style={{ 
-                                        fontWeight: '600', 
-                                        color: '#2c3e50',
-                                        margin: 0
-                                    }}>
+                                    <span
+                                        onClick={() => navigate(`/profile/${review.userId}`)}
+                                        style={{ 
+                                            fontWeight: '600', 
+                                            color: '#27ae60',
+                                            margin: 0,
+                                            cursor: 'pointer',
+                                            textDecoration: 'none'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.textDecoration = 'underline';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.currentTarget.style.textDecoration = 'none';
+                                        }}
+                                    >
                                         {review.userName || 'Anonymous User'}
-                                    </p>
+                                    </span>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                         <p style={{ 
                                             fontSize: '14px', 

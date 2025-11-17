@@ -23,6 +23,11 @@ const LoggedInName: React.FC = () => {
         navigate('/map');
     }
 
+    function goToProfile(event: React.MouseEvent<HTMLButtonElement>): void {
+        event.preventDefault();
+        navigate('/profile');
+    }
+
     return (
         <header
             style={{
@@ -101,6 +106,32 @@ const LoggedInName: React.FC = () => {
                     onClick={goToMap}
                 >
                     Map View
+                </button>
+
+                <button
+                    type="button"
+                    style={{
+                        backgroundColor: 'transparent',
+                        color: 'white',
+                        border: '2px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '8px',
+                        padding: '8px 20px',
+                        fontSize: '15px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.borderColor = 'white';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    }}
+                    onClick={goToProfile}
+                >
+                    Profile
                 </button>
 
                 <button

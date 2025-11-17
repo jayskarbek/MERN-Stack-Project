@@ -54,6 +54,9 @@ app.use('/api', passwordRoute);
 const verifyRoute = require('./routes/verify')(db);
 app.use('/verify', verifyRoute);
 
+const profileRoute = require('./routes/profile')(db);
+app.use('/api', profileRoute);
+
 
 // Starts the server
 const PORT = process.env.PORT || 5000;
