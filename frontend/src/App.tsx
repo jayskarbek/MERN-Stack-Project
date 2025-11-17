@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CardPage from './pages/CardPage.tsx';
 import ParkDetailsPage from './pages/ParkDetailsPage';
+import MapPage from './pages/MapPage';
 import { auth } from './utils/auth';
 import VerifyEmail from './components/VerifyEmail';
 import ForgotPassPage from './pages/ForgotPassPage';
@@ -30,6 +31,14 @@ function App() {
                 element={
                     <ProtectedRoute>
                         <CardPage />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/map" 
+                element={
+                    <ProtectedRoute>
+                        <MapPage />
                     </ProtectedRoute>
                 } 
             />

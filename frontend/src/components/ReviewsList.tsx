@@ -109,7 +109,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, onReviewUpdated, par
                 marginBottom: '20px',
                 color: '#333'
             }}>
-                Reviews ({reviews.length})
+                {reviews.length > 0 ? `Reviews (${reviews.length})` : 'Reviews'}
             </h2>
             
             {reviews.length === 0 ? (

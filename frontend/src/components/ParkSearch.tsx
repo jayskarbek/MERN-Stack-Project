@@ -43,7 +43,10 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
             padding: '24px',
             marginBottom: '30px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            border: '1px solid #e0e0e0'
+            border: '1px solid #e0e0e0',
+            width: '100%',
+            maxWidth: '100%',
+            boxSizing: 'border-box'
         }}>
             <h2 style={{
                 fontSize: '24px',
@@ -57,12 +60,12 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                gridTemplateColumns: '2fr 1fr 1fr auto',
                 gap: '16px',
                 alignItems: 'end'
             }}>
                 
-                <div style={{ flex: '2', minWidth: '250px' }}>
+                <div style={{ minWidth: 0 }}>
                     <label style={{
                         display: 'block',
                         fontSize: '14px',
@@ -113,7 +116,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </div>
                 </div>
 
-                <div style={{ flex: '1', minWidth: '200px' }}>
+                <div style={{ minWidth: 0 }}>
                     <label style={{
                         display: 'block',
                         fontSize: '14px',
@@ -148,7 +151,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
-                <div style={{ flex: '1', minWidth: '200px' }}>
+                <div style={{ minWidth: 0 }}>
                     <label style={{
                         display: 'block',
                         fontSize: '14px',
@@ -199,8 +202,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                                 cursor: 'pointer',
                                 fontWeight: '600',
                                 transition: 'background-color 0.3s',
-                                whiteSpace: 'nowrap',
-                                marginTop: '28px'
+                                whiteSpace: 'nowrap'
                             }}
                             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c0392b'}
                             onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e74c3c'}

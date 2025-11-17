@@ -14,13 +14,7 @@ async function calculateParkRatings(parkId) {
     
     if (reviews.length === 0) {
         return {
-            averageRating: 0,
-            reviewCount: 0,
-            ratingBreakdown: {
-                views: 0,
-                location: 0,
-                amenities: 0
-            }
+            reviewCount: 0
         };
     }
 
@@ -53,7 +47,8 @@ async function calculateParkRatings(parkId) {
     // Get all parks with ratings
     router.get('/parks', async (req, res) => {
         try {
-            const parks = await parksCollection.find().toArray();
+            // Sort by name alphabetically by default
+            const parks = await parksCollection.find().sort({ name: 1 }).toArray();
             
             // Add ratings to each park
             const parksWithRatings = await Promise.all(
@@ -112,7 +107,7 @@ async function calculateParkRatings(parkId) {
             // Fetch all parks that the user has reviewed
             const reviewedParks = await parksCollection.find({ 
                 _id: { $in: objectIds }
-            }).toArray();
+            }).sort({ name: 1 }).toArray();
             
             console.log('Found parks:', reviewedParks.length);
             

@@ -6,6 +6,7 @@ import ReviewForm from './ReviewForm';
 import { buildApiUrl } from '../utils/api';
 import type { RatingSet, Review } from '../types/Review';
 import { getDisplayUrl } from '../utils/wikipediaImageHelper';
+import { TrophySpin } from 'react-loading-indicators';
 
 interface Park {
     _id: string;
@@ -51,15 +52,14 @@ const ParkDetails: React.FC = () => {
     if (loading) {
         return (
             <div style={{
+                
+                textAlign: 'center',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '400px',
-                fontSize: '18px',
-                color: '#6c757d',
-                paddingTop: '80px'
-            }}>
-                Loading park details...
+                height: '100vh',
+            }}> 
+                <TrophySpin color="#36d036" size="large" text="loading..." textColor="" />
             </div>
         );
     }
@@ -168,14 +168,17 @@ const ParkDetails: React.FC = () => {
                                 display: 'block',
                                 marginBottom: '4px'
                             }}>
-                                Total Ratings
+                                Total Reviews
                             </span>
                             <span style={{ 
                                 fontSize: '16px', 
                                 color: '#2c3e50',
                                 fontWeight: '500'
                             }}>
-                                {park.reviewCount || 'No ratings yet'}
+                                {park.reviewCount && park.reviewCount > 0 
+                                    ? `${park.reviewCount} ${park.reviewCount === 1 ? 'review' : 'reviews'}`
+                                    : 'No reviews yet'
+                                }
                             </span>
                         </div>
                     </div>
@@ -227,6 +230,33 @@ const ParkDetails: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    )}
+
+                    {(!park.reviewCount || park.reviewCount === 0) && (
+                        <div style={{
+                            marginTop: '30px',
+                            padding: '30px',
+                            backgroundColor: '#f8f9fa',
+                            borderRadius: '8px',
+                            textAlign: 'center'
+                        }}>
+                            <div style={{ fontSize: '48px', marginBottom: '12px' }}></div>
+                            <h3 style={{ 
+                                fontSize: '20px', 
+                                fontWeight: 'bold', 
+                                color: '#2c3e50',
+                                marginBottom: '8px'
+                            }}>
+                                No Reviews Yet
+                            </h3>
+                            <p style={{
+                                fontSize: '16px',
+                                color: '#6c757d',
+                                margin: 0
+                            }}>
+                                Be the first to share your experience at this park!
+                            </p>
                         </div>
                     )}
 

@@ -4,6 +4,7 @@ import StateParkCard from './StateParkCard';
 import ParkSearchFilter from './ParkSearch';
 import { auth } from '../utils/auth';
 import { buildApiUrl } from '../utils/api';
+import { TrophySpin } from 'react-loading-indicators';
 
 interface Park {
     _id: string;
@@ -31,7 +32,6 @@ const StateParkList: React.FC = () => {
     const [selectedCounty, setSelectedCounty] = useState<string>('all');
     const [showMyReviews, setShowMyReviews] = useState<boolean>(false);
 
-    // Initial load - get all parks for county list
     useEffect(() => {
         async function fetchAllParks() {
             try {
@@ -144,13 +144,15 @@ const StateParkList: React.FC = () => {
 
     if (loading && !loadingReviewed) {
         return (
-            <div style={{ 
-                paddingTop: '100px', 
+            <div style={{
+                
                 textAlign: 'center',
-                fontSize: '18px',
-                color: '#666'
-            }}>
-                Loading parks...
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}> 
+                <TrophySpin color="#36d036" size="large" text="loading..." textColor="" />
             </div>
         );
     }
@@ -169,7 +171,7 @@ const StateParkList: React.FC = () => {
     }
 
     return (
-        <div style={{ paddingTop: '80px', padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ paddingTop: '80px', padding: '20px', width: '100%', maxWidth: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
             <ParkSearchFilter
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -248,8 +250,8 @@ const StateParkList: React.FC = () => {
             ) : (
                 <div style={{ 
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: '24px',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                    gap: '20px',
                     padding: '0 0 40px 0'
                 }}>
                     {parks.map((park) => (

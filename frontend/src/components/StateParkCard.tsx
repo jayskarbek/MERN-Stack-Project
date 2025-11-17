@@ -45,42 +45,29 @@ const StateParkCard: React.FC<StateParkProps> = ({
     return (
         <Link to={`/parks/${id}`} className="state-park-card-link">
             <div className="state-park-card">
-                <img src={displayImageUrl} alt={name} className="state-park-image" />
-                <div className="state-park-info">
-                    <h2 className="state-park-name">{name}</h2>
-                    <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '8px',
-                        marginBottom: '8px',
-                        fontSize: '16px'
-                    }}>
-                        <div style={{ display: 'flex', gap: '2px' }}>
-                            {renderStars(averageRating)}
+                <div className="state-park-image-container">
+                    <img src={displayImageUrl} alt={name} className="state-park-image" />
+                    <div className="state-park-overlay">
+                        <div className="overlay-content">
+                            <div className="park-rating-badge">
+                                <span className="rating-number">
+                                    {averageRating > 0 ? averageRating.toFixed(1) : '—'}
+                                </span>
+                                <div className="rating-stars">
+                                    {renderStars(averageRating)}
+                                </div>
+                            </div>
                         </div>
-                        <span style={{ 
-                            fontWeight: '600', 
-                            color: '#2c3e50',
-                            fontSize: '15px'
-                        }}>
-                            {averageRating > 0 ? averageRating.toFixed(1) : 'No ratings'}
-                        </span>
-                        {reviewCount > 0 && (
-                            <span style={{ 
-                                color: '#6c757d',
-                                fontSize: '14px'
-                            }}>
-                                ({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})
-                            </span>
-                        )}
                     </div>
-
-                    <p className="state-park-counties">
-                        <strong>County:</strong> {counties.join(', ')}
-                    </p>
-                    <a href={park_page} target="_blank" rel="noopener noreferrer" className="state-park-link">
-                        Learn More
-                    </a>
+                </div>
+                <div className="state-park-info">
+                    <h3 className="state-park-name">{name}</h3>
+                    <p className="state-park-county">{counties.join(', ')}</p>
+                    {reviewCount > 0 && (
+                        <p className="state-park-reviews">
+                            {reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}
+                        </p>
+                    )}
                 </div>
             </div>
         </Link>
