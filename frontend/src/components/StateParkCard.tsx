@@ -17,8 +17,7 @@ const StateParkCard: React.FC<StateParkProps> = ({
     id, 
     name, 
     counties, 
-    image_url, 
-    park_page,
+    image_url,
     averageRating = 0,
     reviewCount = 0
 }) => {
