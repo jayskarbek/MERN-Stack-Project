@@ -48,7 +48,7 @@ const TopParksSection: React.FC<TopParksSectionProps> = ({ topParks }) => {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
                 gap: '20px'
             }}>
-                {topParks.map((topPark, index) => (
+                {topParks.map((topPark) => (
                     <div
                         key={topPark.park._id}
                         onClick={() => navigate(`/parks/${topPark.park._id}`)}
