@@ -34,7 +34,7 @@ const LoggedInName: React.FC = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '15px 30px',
+                padding: '15px clamp(15px, 3vw, 30px)',
                 backgroundColor: '#0f3b04',
                 color: 'white',
                 position: 'fixed',
@@ -43,19 +43,30 @@ const LoggedInName: React.FC = () => {
                 width: '100%',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
                 zIndex: 1000,
-                height: '70px',
+                minHeight: '70px',
                 boxSizing: 'border-box',
+                flexWrap: 'wrap',
+                gap: '12px'
             }}
         >
             <div style={{ 
-                fontSize: '1.25rem', 
+                fontSize: 'clamp(1rem, 2vw, 1.25rem)',
                 fontWeight: '600',
-                letterSpacing: '0.3px'
+                letterSpacing: '0.3px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '300px'
             }}>
                 Welcome, {userName}
             </div>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ 
+                display: 'flex', 
+                gap: 'clamp(6px, 1vw, 12px)',
+                flexWrap: 'wrap',
+                justifyContent: 'flex-end'
+            }}>
                 <button
                     type="button"
                     style={{
@@ -63,11 +74,12 @@ const LoggedInName: React.FC = () => {
                         color: 'white',
                         border: '2px solid rgba(255, 255, 255, 0.3)',
                         borderRadius: '8px',
-                        padding: '8px 20px',
-                        fontSize: '15px',
+                        padding: '8px clamp(12px, 2vw, 20px)',
+                        fontSize: 'clamp(13px, 1.5vw, 15px)',
                         fontWeight: '500',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
+                        whiteSpace: 'nowrap'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -89,11 +101,12 @@ const LoggedInName: React.FC = () => {
                         color: 'white',
                         border: '2px solid rgba(255, 255, 255, 0.3)',
                         borderRadius: '8px',
-                        padding: '8px 20px',
-                        fontSize: '15px',
+                        padding: '8px clamp(12px, 2vw, 20px)',
+                        fontSize: 'clamp(13px, 1.5vw, 15px)',
                         fontWeight: '500',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
+                        whiteSpace: 'nowrap'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -105,7 +118,7 @@ const LoggedInName: React.FC = () => {
                     }}
                     onClick={goToMap}
                 >
-                    Map View
+                    Map
                 </button>
 
                 <button
@@ -115,11 +128,12 @@ const LoggedInName: React.FC = () => {
                         color: 'white',
                         border: '2px solid rgba(255, 255, 255, 0.3)',
                         borderRadius: '8px',
-                        padding: '8px 20px',
-                        fontSize: '15px',
+                        padding: '8px clamp(12px, 2vw, 20px)',
+                        fontSize: 'clamp(13px, 1.5vw, 15px)',
                         fontWeight: '500',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
+                        whiteSpace: 'nowrap'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -141,11 +155,12 @@ const LoggedInName: React.FC = () => {
                         color: 'white',
                         border: 'none',
                         borderRadius: '8px',
-                        padding: '8px 20px',
-                        fontSize: '15px',
+                        padding: '8px clamp(12px, 2vw, 20px)',
+                        fontSize: 'clamp(13px, 1.5vw, 15px)',
                         fontWeight: '500',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
+                        whiteSpace: 'nowrap'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.backgroundColor = '#c82333';

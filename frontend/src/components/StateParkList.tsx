@@ -171,7 +171,14 @@ const StateParkList: React.FC = () => {
     }
 
     return (
-        <div style={{ paddingTop: '80px', padding: '20px', width: '100%', maxWidth: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
+        <div style={{ 
+            paddingTop: '80px', 
+            padding: '20px clamp(20px, 4vw, 60px)', 
+            width: '100%',
+            maxWidth: '1800px',
+            margin: '0 auto', 
+            boxSizing: 'border-box'
+        }}>
             <ParkSearchFilter
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -250,9 +257,10 @@ const StateParkList: React.FC = () => {
             ) : (
                 <div style={{ 
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-                    gap: '20px',
-                    padding: '0 0 40px 0'
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(160px, 15vw, 220px), 1fr))',
+                    gap: 'clamp(16px, 2vw, 24px)',
+                    padding: '0 0 40px 0',
+                    width: '100%'
                 }}>
                     {parks.map((park) => (
                         <StateParkCard

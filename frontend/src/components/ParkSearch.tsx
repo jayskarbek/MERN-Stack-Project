@@ -45,7 +45,6 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             border: '1px solid #e0e0e0',
             width: '100%',
-            maxWidth: '100%',
             boxSizing: 'border-box'
         }}>
             <h2 style={{
@@ -60,12 +59,12 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: '2fr 1fr 1fr auto',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '16px',
                 alignItems: 'end'
             }}>
                 
-                <div style={{ minWidth: 0 }}>
+                <div style={{ minWidth: 0, gridColumn: showClearButton ? 'span 1' : 'span 2' }}>
                     <label style={{
                         display: 'block',
                         fontSize: '14px',
@@ -189,10 +188,20 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 </div>
 
                 {showClearButton && (
-                    <div style={{ flex: '0 0 auto' }}>
+                    <div style={{ minWidth: 0 }}>
+                        <label style={{
+                            display: 'block',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            color: 'transparent',
+                            marginBottom: '8px'
+                        }}>
+                            &nbsp;
+                        </label>
                         <button
                             onClick={onClearFilters}
                             style={{
+                                width: '100%',
                                 padding: '12px 20px',
                                 fontSize: '14px',
                                 backgroundColor: '#e74c3c',
@@ -259,7 +268,9 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 color: '#6c757d',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '8px'
             }}>
                 <span>
                     <strong style={{ color: '#27ae60' }}>{resultsCount}</strong> 
