@@ -69,22 +69,6 @@ const TopParksSection: React.FC<TopParksSectionProps> = ({ topParks }) => {
                             e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
                         }}
                     >
-                        {index === 0 && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '8px',
-                                right: '8px',
-                                backgroundColor: '#f1c40f',
-                                color: '#fff',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
-                                zIndex: 1
-                            }}>
-                                #1
-                            </div>
-                        )}
                         <img
                             src={getDisplayUrl(topPark.park.image_url)}
                             alt={topPark.park.name}
@@ -119,7 +103,7 @@ const TopParksSection: React.FC<TopParksSectionProps> = ({ topParks }) => {
 
                             <p style={{
                                 fontSize: '12px',
-                                color: '#95a5a6',
+                                color: '#2A3030FF',
                                 margin: 0
                             }}>
                                 {topPark.park.counties.join(', ')}

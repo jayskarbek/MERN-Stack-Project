@@ -74,6 +74,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     }}>
                         Search Parks {isSearching && <span style={{ color: '#3498db', fontSize: '12px' }}>(searching...)</span>}
                     </label>
+
                     <div style={{ position: 'relative' }}>
                         <input
                             type="text"
@@ -93,6 +94,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                             onFocus={(e) => e.currentTarget.style.borderColor = '#27ae60'}
                             onBlur={(e) => e.currentTarget.style.borderColor = '#e0e0e0'}
                         />
+
                         {searchTerm && (
                             <button
                                 onClick={() => setSearchTerm('')}
@@ -116,16 +118,21 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 </div>
 
                 <div style={{ minWidth: 0 }}>
-                    <label style={{
-                        display: 'block',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: '#2c3e50',
-                        marginBottom: '8px'
-                    }}>
+                    <label 
+                        htmlFor="countySelect"
+                        style={{
+                            display: 'block',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            color: '#2c3e50',
+                            marginBottom: '8px'
+                        }}
+                    >
                         Filter by County
                     </label>
+
                     <select
+                        id="countySelect"
                         value={selectedCounty}
                         onChange={(e) => setSelectedCounty(e.target.value)}
                         style={{
@@ -151,16 +158,21 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 </div>
 
                 <div style={{ minWidth: 0 }}>
-                    <label style={{
-                        display: 'block',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: '#2c3e50',
-                        marginBottom: '8px'
-                    }}>
+                    <label 
+                        htmlFor="sortSelect"
+                        style={{
+                            display: 'block',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            color: '#2c3e50',
+                            marginBottom: '8px'
+                        }}
+                    >
                         Sort By
                     </label>
+
                     <select
+                        id="sortSelect"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
                         style={{
@@ -187,6 +199,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                     </select>
                 </div>
 
+                {/* Clear Button */}
                 {showClearButton && (
                     <div style={{ minWidth: 0 }}>
                         <label style={{
@@ -198,6 +211,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                         }}>
                             &nbsp;
                         </label>
+
                         <button
                             onClick={onClearFilters}
                             style={{
@@ -265,7 +279,7 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 backgroundColor: '#f8f9fa',
                 borderRadius: '8px',
                 fontSize: '14px',
-                color: '#6c757d',
+                color: '#000000FF',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -273,11 +287,12 @@ const ParkSearchFilter: React.FC<ParkSearchFilterProps> = ({
                 gap: '8px'
             }}>
                 <span>
-                    <strong style={{ color: '#27ae60' }}>{resultsCount}</strong> 
+                    <strong style={{ color: '#000000FF' }}>{resultsCount}</strong> 
                     {' '}park{resultsCount !== 1 ? 's' : ''} found
                     {searchTerm && ` for "${searchTerm}"`}
                     {showMyReviews && ' (your reviews)'}
                 </span>
+
                 {totalCount > 0 && !showMyReviews && (
                     <span style={{ fontSize: '13px' }}>
                         Total: {totalCount} parks

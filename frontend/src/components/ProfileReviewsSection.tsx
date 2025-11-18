@@ -59,7 +59,7 @@ const ProfileReviewsSection: React.FC<ProfileReviewsSectionProps> = ({
                         onClick={() => setShowAllReviews(!showAllReviews)}
                         style={{
                             padding: '8px 16px',
-                            backgroundColor: '#27ae60',
+                            backgroundColor: '#0f3b04',
                             color: '#fff',
                             border: 'none',
                             borderRadius: '6px',
